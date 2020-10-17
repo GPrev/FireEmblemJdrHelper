@@ -3,6 +3,14 @@
     <q-header elevated>
       <q-toolbar>
 
+        <q-btn
+          v-if="$route.fullPath != '/'"
+          v-go-back.single
+          icon="arrow_back"
+          flat
+          dense
+        />
+
         <q-toolbar-title class="absolute-center">
           {{ title }}
         </q-toolbar-title>
