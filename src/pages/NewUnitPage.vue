@@ -10,7 +10,7 @@
     >
       <q-input
         filled
-        v-model="character.name"
+        v-model="unit.name"
         label="Nom du personnage"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Merci de choisir un nom']"
@@ -18,56 +18,56 @@
 
       <q-input
         filled
-        v-model="character.picture"
+        v-model="unit.picture"
         label="Image du personnage"
       />
 
       <up-down
         class=".col"
         label="HP"
-        v-model="character.stats.hpMax"
+        v-model="unit.stats.hpMax"
         :min="bounds.hpMax.min"
         :max="bounds.hpMax.max"
       />
       <up-down
         class=".col"
         label="ATQ"
-        v-model="character.stats.atk"
+        v-model="unit.stats.atk"
         :min="bounds.atk.min"
         :max="bounds.atk.max"
       />
       <up-down
         class=".col"
         label="VIT"
-        v-model="character.stats.spd"
+        v-model="unit.stats.spd"
         :min="bounds.spd.min"
         :max="bounds.spd.max"
       />
       <up-down
         class=".col"
         label="TEC"
-        v-model="character.stats.skl"
+        v-model="unit.stats.skl"
         :min="bounds.skl.min"
         :max="bounds.skl.max"
       />
       <up-down
         class=".col"
         label="DEF"
-        v-model="character.stats.def"
+        v-model="unit.stats.def"
         :min="bounds.def.min"
         :max="bounds.def.max"
       />
       <up-down
         class=".col"
         label="RES"
-        v-model="character.stats.res"
+        v-model="unit.stats.res"
         :min="bounds.res.min"
         :max="bounds.res.max"
       />
       <up-down
         class=".col"
         label="CHA"
-        v-model="character.stats.lck"
+        v-model="unit.stats.lck"
         :min="bounds.lck.min"
         :max="bounds.lck.max"
       />
@@ -100,16 +100,16 @@ export default {
   methods: {
     ...mapActions('UnitStore', ['firebaseCreateUnit']),
     onSubmit () {
-      this.character.owner = this.userDetails.userId
-      this.character.hpCur = this.character.stats.hpMax
-      this.firebaseCreateUnit({ character: this.character })
+      this.unit.owner = this.userDetails.userId
+      this.unit.hpCur = this.unit.stats.hpMax
+      this.firebaseCreateUnit({ unit: this.unit })
       this.$router.push('/')
     }
   },
 
   data () {
     return {
-      character: {
+      unit: {
         name: null,
         picture: null,
         stats: {
@@ -135,7 +135,7 @@ export default {
   },
 
   mounted () {
-    this.character.owner = this.userDetails.userId
+    this.unit.owner = this.userDetails.userId
   }
 }
 </script>
