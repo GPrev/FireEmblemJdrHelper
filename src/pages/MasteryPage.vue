@@ -59,12 +59,60 @@
       animated
     >
       <q-tab-panel name="lv0">
+        <q-list
+          bordered
+          separator
+        >
+          <q-item
+            clickable
+            v-ripple
+            v-for="(skill, key) in beginnerSkills"
+            :key="key"
+          >
+            <q-item-section>
+              <q-item-label>{{skill.name}}</q-item-label>
+              <q-item-label caption>{{skill.description}}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
       </q-tab-panel>
 
       <q-tab-panel name="lv1">
+        <q-list
+          bordered
+          separator
+        >
+          <q-item
+            clickable
+            v-ripple
+            v-for="(skill, key) in intermediateSkills"
+            :key="key"
+          >
+            <q-item-section>
+              <q-item-label>{{skill.name}}</q-item-label>
+              <q-item-label caption>{{skill.description}}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
       </q-tab-panel>
 
       <q-tab-panel name="lv2">
+        <q-list
+          bordered
+          separator
+        >
+          <q-item
+            clickable
+            v-ripple
+            v-for="(skill, key) in advancedSkills"
+            :key="key"
+          >
+            <q-item-section>
+              <q-item-label>{{skill.name}}</q-item-label>
+              <q-item-label caption>{{skill.description}}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
       </q-tab-panel>
     </q-tab-panels>
   </div>
@@ -88,11 +136,20 @@ export default {
       }
       payload.unit.masteries[this.mastery.id] = this.level + 1
       this.firebaseUpdateUnit(payload)
+    },
+    getSkills (level) {
+      let myskills = {}
+      if (this.mastery.skills[level]) {
+        Object.keys(this.mastery.skills[level]).forEach(key => {
+          myskills[key] = this.skills[this.mastery.skills[level][key]];
+        })
+      }
+      return myskills
     }
   },
   computed: {
     ...mapState('UnitStore', ['units']),
-    ...mapState('StaticStore', ['masteries']),
+    ...mapState('StaticStore', ['masteries', 'skills']),
     unit () {
       return this.units[this.$route.params.unitID]
     },
@@ -105,6 +162,15 @@ export default {
         level = this.unit.masteries[this.mastery.id]
       }
       return level
+    },
+    beginnerSkills () {
+      return this.getSkills('lv1')
+    },
+    intermediateSkills () {
+      return this.getSkills('lv2')
+    },
+    advancedSkills () {
+      return this.getSkills('lv3')
     }
   }
 }

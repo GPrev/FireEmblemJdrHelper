@@ -9,10 +9,9 @@ import { mapActions } from 'vuex'
 
 export default {
   methods: {
-    ...mapActions('UserStore', ['handleAuthStateChanged']),
-    ...mapActions('UserStore', ['firebaseGetUsers']),
+    ...mapActions('UserStore', ['handleAuthStateChanged', 'firebaseGetUsers']),
     ...mapActions('UnitStore', ['firebaseGetUnits']),
-    ...mapActions('StaticStore', ['firebaseGetMasteries'])
+    ...mapActions('StaticStore', ['firebaseGetMasteries', 'firebaseGetSkills'])
   },
   mounted () {
     // Listen to authentification changes
@@ -23,6 +22,7 @@ export default {
     this.firebaseGetUsers()
     // Listen to static changes (should be only once)
     this.firebaseGetMasteries()
+    this.firebaseGetSkills()
   }
 }
 </script>

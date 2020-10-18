@@ -1,6 +1,5 @@
 import Vue from 'vue'
-import { boot } from "quasar/wrappers"
-import { firebaseAuth, firebaseDB } from 'boot/firebase'
+import { firebaseDB } from 'boot/firebase'
 
 const state = {
     masteries: {},
@@ -20,11 +19,25 @@ const actions = {
             })
         })
     },
+    firebaseGetSkills ({ commit }) {
+        firebaseDB.ref('skills').on('child_added', snapshot => {
+            let details = snapshot.val()
+            let id = snapshot.key
+            details.id = id
+            commit('addSkill', {
+                id,
+                details
+            })
+        })
+    },
 }
 
 const mutations = {
     addMastery (state, payload) {
         Vue.set(state.masteries, payload.id, payload.details)
+    },
+    addSkill (state, payload) {
+        Vue.set(state.skills, payload.id, payload.details)
     },
 }
 
