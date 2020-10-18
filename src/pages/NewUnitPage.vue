@@ -101,7 +101,9 @@ export default {
     ...mapActions('UnitStore', ['firebaseCreateUnit']),
     onSubmit () {
       this.character.owner = this.userDetails.userId
+      this.character.hpCur = this.character.stats.hpMax
       this.firebaseCreateUnit({ character: this.character })
+      this.$router.push('/')
     }
   },
 
