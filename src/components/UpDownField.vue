@@ -18,6 +18,7 @@
       >
         <q-btn
           flat
+          padding="none sm"
           icon="keyboard_arrow_up"
           @click="function() { if(!max || myvalue<max){myvalue += 1} }"
         />
@@ -28,6 +29,7 @@
       >
         <q-btn
           flat
+          padding="none sm"
           icon="keyboard_arrow_down"
           @click="function() { if(!min || myvalue>min){myvalue -= 1} }"
         />
