@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { boot } from "quasar/wrappers"
 import { firebaseAuth, firebaseDB } from 'boot/firebase'
 
@@ -53,8 +54,10 @@ const actions = {
                         online: true
                     }
                 })
-                dispatch('firebaseGetUsers')
-                this.$router.push('/')
+                // Useless, we don't care about the user list
+                // dispatch('firebaseGetUsers')
+                // We get errors if we are already at root, so we ignore them
+                this.$router.push('/').catch(err => { })
             }
             else {
                 // User is logged out.

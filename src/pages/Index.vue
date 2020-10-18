@@ -7,11 +7,11 @@
       <q-item-label header>Vos personnages</q-item-label>
 
       <q-item
-        v-for="unit in pcs"
+        v-for="(unit, key) in pcs"
         :key="unit.id"
         class="q-my-sm"
         clickable
-        to="/unit"
+        :to="'/unit/' + key"
         v-ripple
       >
         <unit-card
@@ -24,10 +24,11 @@
       <q-item-label header>Autres personnages</q-item-label>
 
       <q-item
-        v-for="unit in npcs"
+        v-for="(unit, key) in npcs"
         :key="unit.id"
         class="q-my-sm"
         clickable
+        :to="'/unit/' + key"
         v-ripple
       >
         <unit-card
@@ -41,49 +42,33 @@
 </template>
 
 <script>
-const pcs = [{
-  id: 1,
-  name: 'Ruddy Jedrzej',
-  owner: 'rjedrzej0@discuz.net',
-  letter: 'R'
-}, {
-  id: 2,
-  name: 'Mallorie Alessandrini',
-  owner: 'malessandrini1@marketwatch.com',
-  letter: 'M'
-}, {
-  id: 3,
-  name: 'Elisabetta Wicklen',
-  owner: 'ewicklen2@microsoft.com',
-  letter: 'E'
-}, {
-  id: 4,
-  name: 'Seka Fawdrey',
-  owner: 'sfawdrey3@wired.com',
-  letter: 'S'
-}]
-
-const npcs = [{
-  id: 5,
-  name: 'Brunhilde Panswick',
-  owner: 'bpanswick4@csmonitor.com',
-  avatar: 'avatar2.jpg'
-}, {
-  id: 6,
-  name: 'Winfield Stapforth',
-  owner: 'wstapforth5@pcworld.com',
-  avatar: 'avatar6.jpg'
-}]
+import { mapState, mapActions } from 'vuex'
 
 export default {
-  data () {
-    return {
-      pcs,
-      npcs
-    }
+  computed: {
+    ...mapState('UserStore', ['userDetails']),
+    ...mapState('UnitStore', ['units']),
+    pcs () {
+      let unitsFiltered = {}
+      Object.keys(this.units).forEach(key => {
+        if (this.units[key].owner === this.userDetails.userId) {
+          unitsFiltered[key] = this.units[key];
+        }
+      })
+      return unitsFiltered
+    },
+    npcs () {
+      let unitsFiltered = {}
+      Object.keys(this.units).forEach(key => {
+        if (this.units[key].owner !== this.userDetails.userId) {
+          unitsFiltered[key] = this.units[key];
+        }
+      })
+      return unitsFiltered
+    },
   },
   components: {
     'unit-card': require('components/UnitCard').default
-  }
+  },
 }
 </script>

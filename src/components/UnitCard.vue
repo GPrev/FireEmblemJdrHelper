@@ -3,7 +3,7 @@
     <q-card-section horizontal>
       <q-img
         class="col-5"
-        src="https://cdn.quasar.dev/img/parallax1.jpg"
+        :src="unit.picture"
       />
       <q-card-section
         vertical
@@ -14,32 +14,32 @@
             {{unit.name}}
           </div>
           <div>
-            {{unit.owner}}
+            {{users[unit.owner].name}}
           </div>
         </div>
         <div>
-          HP : {{unit.hpCur}}/{{unit.hpMax}}
+          HP : {{unit.hpCur}}/{{unit.stats.hpMax}}
         </div>
         <div class="row">
           <div class="col">
-            ATQ : {{unit.atk}}
+            ATQ : {{unit.stats.atk}}
           </div>
           <div class="col">
-            VIT : {{unit.vit}}
+            VIT : {{unit.stats.spd}}
           </div>
           <div class="col">
-            TEC : {{unit.tec}}
+            TEC : {{unit.stats.skl}}
           </div>
         </div>
         <div class="row">
           <div class="col">
-            DEF : {{unit.def}}
+            DEF : {{unit.stats.def}}
           </div>
           <div class="col">
-            RES : {{unit.res}}
+            RES : {{unit.stats.res}}
           </div>
           <div class="col">
-            CHA : {{unit.cha}}
+            CHA : {{unit.stats.lck}}
           </div>
         </div>
       </q-card-section>
@@ -48,7 +48,12 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
-  props: ['unit']
+  props: ['unit'],
+  computed: {
+    ...mapState('UserStore', ['users']),
+  },
 }
 </script>
