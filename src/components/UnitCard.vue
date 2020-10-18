@@ -3,7 +3,7 @@
     <q-card-section horizontal>
       <q-img
         class="col-5"
-        :src="unit.picture"
+        :src="picture"
       />
       <q-card-section
         vertical
@@ -57,6 +57,12 @@ export default {
     ownerID () {
       if (this.unit.owner && this.users[this.unit.owner]) {
         return this.users[this.unit.owner].name
+      }
+      else return ""
+    },
+    picture () {
+      if (this.unit.picture) {
+        return this.unit.picture
       }
       else return ""
     }

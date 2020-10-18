@@ -5,9 +5,10 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Index.vue') },
-      { path: '/unit/:unitID', component: () => import('pages/UnitPage.vue') },
       { path: '/auth', component: () => import('pages/AuthPage.vue') },
-      { path: '/new', component: () => import('pages/NewUnitPage.vue') }
+      { path: '/new', component: () => import('pages/NewUnitPage.vue') },
+      { path: '/unit/:unitID', component: () => import('pages/UnitPage.vue') },
+      { path: '/unit/:unitID/training/:masteryID', component: () => import('pages/MasteryPage.vue') },
     ]
   },
 

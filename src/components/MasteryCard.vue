@@ -3,6 +3,7 @@
     class="q-pa-md q-ma-xs"
     clickable
     v-ripple
+    @click="() => { $router.push(this.unit.id + '/training/' + mastery.id) }"
   >
     <div class="row justify-center">
       <q-avatar>
@@ -15,7 +16,7 @@
     <q-rating
       class="row"
       size="18px"
-      v-model="level"
+      :value="level"
       :max="3"
       color="primary"
     />

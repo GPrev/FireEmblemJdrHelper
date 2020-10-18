@@ -27,7 +27,10 @@ const actions = {
         })
     },
     firebaseCreateUnit ({ }, payload) {
-        firebaseDB.ref('units').push(payload.character)
+        firebaseDB.ref('units').push(payload.unit)
+    },
+    firebaseUpdateUnit ({ }, payload) {
+        firebaseDB.ref('units/' + payload.key).update(payload.unit)
     }
 }
 
