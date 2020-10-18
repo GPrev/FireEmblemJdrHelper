@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 
 import UserStore from './UserStore'
 import UnitStore from './UnitStore'
+import StaticStore from './StaticStore'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       UserStore,
-      UnitStore
+      UnitStore,
+      StaticStore
     },
 
     // enable strict mode (adds overhead!)

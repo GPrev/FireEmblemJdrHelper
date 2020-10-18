@@ -11,6 +11,7 @@ const actions = {
         firebaseDB.ref('units').on('child_added', snapshot => {
             let unitDetails = snapshot.val()
             let unitID = snapshot.key
+            unitDetails.id = unitID
             commit('addUnit', {
                 unitID,
                 unitDetails
