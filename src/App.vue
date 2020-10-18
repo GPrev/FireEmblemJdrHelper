@@ -11,7 +11,7 @@ export default {
   methods: {
     ...mapActions('UserStore', ['handleAuthStateChanged', 'firebaseGetUsers']),
     ...mapActions('UnitStore', ['firebaseGetUnits']),
-    ...mapActions('StaticStore', ['firebaseGetMasteries', 'firebaseGetSkills'])
+    ...mapActions('StaticStore', ['firebaseGetMasteries', 'firebaseGetSkills', 'firebaseGetItems'])
   },
   mounted () {
     // Listen to authentification changes
@@ -23,6 +23,7 @@ export default {
     // Listen to static changes (should be only once)
     this.firebaseGetMasteries()
     this.firebaseGetSkills()
+    this.firebaseGetItems()
   }
 }
 </script>

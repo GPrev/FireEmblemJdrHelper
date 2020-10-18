@@ -4,7 +4,7 @@ import { firebaseDB } from 'boot/firebase'
 const state = {
     masteries: {},
     skills: {},
-    equipment: {}
+    items: {}
 }
 
 const actions = {
@@ -30,6 +30,17 @@ const actions = {
             })
         })
     },
+    firebaseGetItems ({ commit }) {
+        firebaseDB.ref('items').on('child_added', snapshot => {
+            let details = snapshot.val()
+            let id = snapshot.key
+            details.id = id
+            commit('addItem', {
+                id,
+                details
+            })
+        })
+    },
 }
 
 const mutations = {
@@ -38,6 +49,9 @@ const mutations = {
     },
     addSkill (state, payload) {
         Vue.set(state.skills, payload.id, payload.details)
+    },
+    addItem (state, payload) {
+        Vue.set(state.items, payload.id, payload.details)
     },
 }
 
