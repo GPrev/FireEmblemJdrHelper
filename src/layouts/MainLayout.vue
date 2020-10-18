@@ -11,9 +11,12 @@
           dense
         />
 
-        <q-toolbar-title class="absolute-center">
-          {{ title }}
-        </q-toolbar-title>
+        <q-img
+          class="absolute-center col-5"
+          img-class="my-custom-image"
+          src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Fire_Emblem_series_logo.png"
+        >
+        </q-img>
 
         <q-btn
           v-if="!userDetails.userId"
@@ -70,5 +73,9 @@ export default {
   .q-btn {
     line-height: 1.2;
   }
+}
+
+.my-custom-image {
+  filter: brightness(20);
 }
 </style>
