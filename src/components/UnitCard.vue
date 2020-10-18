@@ -14,7 +14,7 @@
             {{unit.name}}
           </div>
           <div>
-            {{users[unit.owner].name}}
+            {{ownerID}}
           </div>
         </div>
         <div>
@@ -54,6 +54,12 @@ export default {
   props: ['unit'],
   computed: {
     ...mapState('UserStore', ['users']),
+    ownerID () {
+      if (this.unit.owner && this.users[this.unit.owner]) {
+        return this.users[this.unit.owner].name
+      }
+      else return ""
+    }
   },
 }
 </script>

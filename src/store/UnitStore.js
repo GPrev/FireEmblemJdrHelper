@@ -25,6 +25,9 @@ const actions = {
             })
         })
     },
+    firebaseCreateUnit ({ }, payload) {
+        firebaseDB.ref('units').push(payload.character)
+    }
 }
 
 const mutations = {
