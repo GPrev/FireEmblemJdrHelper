@@ -20,6 +20,7 @@
       <q-btn
         class="absolute-right q-ma-md"
         color="primary"
+        :disable="level >= 3"
         @click="levelup"
       >
         Lv. Up
