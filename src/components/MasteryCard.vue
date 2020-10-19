@@ -3,7 +3,7 @@
     class="q-pa-md q-ma-xs"
     clickable
     v-ripple
-    @click="() => { $router.push(this.unit.id + '/training/' + mastery.id) }"
+    @click="() => { if(this.unit.owner === this.userDetails.userId) $router.push(this.unit.id + '/training/' + mastery.id) }"
   >
     <div class="row justify-center">
       <q-avatar>
@@ -25,9 +25,12 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
   props: ['unit', 'mastery'],
   computed: {
+    ...mapState('UserStore', ['userDetails']),
     level () {
       let level = 0
       if (this.unit.masteries && this.unit.masteries[this.mastery.id]) {
