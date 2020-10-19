@@ -132,9 +132,10 @@ export default {
     levelup () {
       let payload = {
         key: this.unit.id,
-        unit: { masteries: {} }
+        unit: {}
       }
-      payload.unit.masteries[this.mastery.id] = this.level + 1
+      let path = 'masteries/' + this.mastery.id
+      payload.unit[path] = this.level + 1
       this.firebaseUpdateUnit(payload)
     },
     getSkills (level) {
