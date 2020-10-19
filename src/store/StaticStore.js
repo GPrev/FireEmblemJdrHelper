@@ -34,7 +34,6 @@ const actions = {
         firebaseDB.ref('items').on('child_added', snapshot => {
             let details = snapshot.val()
             let id = snapshot.key
-            details.id = id
             commit('addItem', {
                 id,
                 details

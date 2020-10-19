@@ -120,7 +120,14 @@ export default {
           def: 25,
           res: 25,
           lck: 25,
-        }
+        },
+        masteries: { sword: 0 },
+        items: {
+          weapons: { none: true },
+          armours: { none: true },
+          mounts: { none: true }
+        },
+        equipment: { weapon: none },
       },
       bounds: {
         hpMax: { min: 25, max: 35 },
