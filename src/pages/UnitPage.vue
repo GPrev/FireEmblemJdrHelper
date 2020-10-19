@@ -2,7 +2,7 @@
   <div class="col">
     <unit-card :unit="unit" />
 
-    <q-card>
+    <div>
       <q-tabs
         v-model="tab"
         dense
@@ -33,8 +33,32 @@
         animated
       >
         <q-tab-panel name="equip">
-          <div class="text-h6">Mails</div>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          <q-list
+            bordered
+            separator
+          >
+            <q-item
+              v-for="template in equipTemplate"
+              :key="template.subtype"
+            >
+              <q-item-section>
+                <q-item-label>
+                  {{template.name}}
+                </q-item-label>
+                <q-list>
+                  <q-item
+                    class="q-px-none"
+                    v-for="i in template.count"
+                    :key="template.subtype + i"
+                  >
+                    <q-card class="full-width">
+                      {{i}}
+                    </q-card>
+                  </q-item>
+                </q-list>
+              </q-item-section>
+            </q-item>
+          </q-list>
         </q-tab-panel>
 
         <q-tab-panel name="train">
@@ -99,7 +123,7 @@
           </q-list>
         </q-tab-panel>
       </q-tab-panels>
-    </q-card>
+    </div>
   </div>
 </template>
 
@@ -113,12 +137,19 @@ export default {
   },
   data () {
     return {
-      tab: 'shop',
+      tab: 'equip',
       itemTypes: {
         weapons: 'Armes',
         armour: 'Armures',
         mounts: 'Montures',
-      }
+      },
+      equipTemplate: [
+        { name: 'Arme', type: 'items', subtype: 'weapons', count: 1 },
+        { name: 'Armure', type: 'items', subtype: 'armours', count: 1 },
+        { name: 'Monture', type: 'items', subtype: 'mounts', count: 1 },
+        { name: 'Styles', type: 'skills', subtype: 'styles', count: 2 },
+        { name: 'Compétences', type: 'skills', subtype: 'skills', count: 2 },
+      ]
     }
   },
   computed: {
