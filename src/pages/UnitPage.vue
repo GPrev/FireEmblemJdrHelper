@@ -52,7 +52,45 @@
                     :key="template.subtype + i"
                   >
                     <q-card class="full-width">
-                      {{i}}
+                      <q-expansion-item group="equipgroup">
+                        <template v-slot:header>
+                          <q-item-section>
+                            <item-card
+                              v-if="template.type === 'items'"
+                              :itemType="template.subtype"
+                              :itemKey="unit.equipment[template.subtype+'-'+i]"
+                            />
+                            <skill-card
+                              v-else
+                              :skillKey="unit.equipment[template.subtype+'-'+i]"
+                            />
+                          </q-item-section>
+                        </template>
+
+                        <q-list
+                          bordered
+                          separator
+                        >
+                          <q-item
+                            clickable
+                            v-ripple
+                            v-for="(itemval, itemkey) in inventory[template.subtype]"
+                            :key="template.subtype+i+itemkey"
+                            @click="equip(template.subtype, i, itemkey)"
+                          >
+                            <item-card
+                              v-if="template.type === 'items'"
+                              :itemKey="itemkey"
+                              :itemType="template.subtype"
+                            />
+                            <skill-card
+                              v-else
+                              :skillKey="itemkey"
+                            >
+                            </skill-card>
+                          </q-item>
+                        </q-list>
+                      </q-expansion-item>
                     </q-card>
                   </q-item>
                 </q-list>
@@ -134,6 +172,8 @@ export default {
   components: {
     'unit-card': require('components/UnitCard.vue').default,
     'mastery-card': require('components/MasteryCard.vue').default,
+    'item-card': require('components/ItemCard.vue').default,
+    'skill-card': require('components/SkillCard.vue').default,
   },
   data () {
     return {
@@ -144,7 +184,7 @@ export default {
         mounts: 'Montures',
       },
       equipTemplate: [
-        { name: 'Arme', type: 'items', subtype: 'weapons', count: 1 },
+        { name: 'Armes', type: 'items', subtype: 'weapons', count: 2 },
         { name: 'Armure', type: 'items', subtype: 'armours', count: 1 },
         { name: 'Monture', type: 'items', subtype: 'mounts', count: 1 },
         { name: 'Styles', type: 'skills', subtype: 'styles', count: 2 },
@@ -157,9 +197,37 @@ export default {
     ...mapState('UnitStore', ['units']),
     ...mapState('StaticStore', ['masteries']),
     ...mapState('StaticStore', ['items']),
+    ...mapState('StaticStore', ['skills']),
     unit () {
       return this.units[this.$route.params.unitID]
     },
+    inventory () {
+      if (this.unit === undefined) {
+        return {}
+      }
+      // Items
+      let inv = Object.assign({}, this.unit.items)
+      // Skills
+      Object.keys(this.unit.masteries).forEach((masteryKey) => {
+        let masteryLevel = this.unit.masteries[masteryKey]
+        for (var i = 1; i <= masteryLevel; i++) {
+          let masterySkills = this.masteries[masteryKey].skills["lv" + masteryLevel]
+          for (var skillIndex in masterySkills) {
+            let skillKey = masterySkills[skillIndex]
+            let skill = this.skills[skillKey]
+
+            if (skill && skill.type !== undefined) {
+              if (inv[skill.type] === undefined) {
+                inv[skill.type] = { none: true }
+              }
+              inv[skill.type][skillKey] = true
+            }
+          }
+        }
+      })
+      // Return
+      return inv
+    }
   },
   methods: {
     ...mapActions('UnitStore', ['firebaseUpdateUnit']),
@@ -170,6 +238,15 @@ export default {
       }
       let path = 'items/' + itemType + '/' + item
       payload.unit[path] = true
+      this.firebaseUpdateUnit(payload)
+    },
+    equip (subtype, i, itemkey) {
+      let payload = {
+        key: this.unit.id,
+        unit: {}
+      }
+      let path = 'equipment/' + subtype + '-' + i
+      payload.unit[path] = itemkey
       this.firebaseUpdateUnit(payload)
     }
   }
