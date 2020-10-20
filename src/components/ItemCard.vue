@@ -1,7 +1,10 @@
 <template>
   <q-item class="q-pa-none q-ma-none">
     <q-item-section avatar>
-      <q-avatar v-if="item.icon">
+      <q-avatar
+        v-if="item.icon"
+        square
+      >
         <img :src="item.icon" />
       </q-avatar>
       <q-avatar
