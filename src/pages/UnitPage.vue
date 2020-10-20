@@ -68,6 +68,7 @@
                         </template>
 
                         <q-list
+                          v-if="unit.owner === userDetails.userId"
                           bordered
                           separator
                         >
