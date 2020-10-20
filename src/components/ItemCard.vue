@@ -1,35 +1,23 @@
 <template>
   <q-item class="q-pa-none q-ma-none">
     <q-item-section avatar>
+      <q-avatar v-if="item.icon">
+        <img :src="item.icon" />
+      </q-avatar>
       <q-avatar
-        icon="bluetooth"
+        v-else
+        icon="help"
         color="primary"
         text-color="white"
       />
     </q-item-section>
 
     <q-item-section>
-      {{item.name}}
-    </q-item-section>
-
-    <q-item-section side>
-      <div class="row items-center">
-        <q-icon
-          name="star"
-          color="red"
-          size="24px"
-        />
-        <q-icon
-          name="star"
-          color="red"
-          size="24px"
-        />
-        <q-icon
-          name="star"
-          color="red"
-          size="24px"
-        />
-      </div>
+      <q-item-label>{{item.name}}</q-item-label>
+      <q-item-label
+        caption
+        v-if="itemType == 'weapons' && item.atk"
+      >ATQ {{item.atk}} PRC {{item.hit}}</q-item-label>
     </q-item-section>
   </q-item>
 </template>

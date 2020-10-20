@@ -134,11 +134,10 @@
                       :key="key2"
                     >
                       <q-item-section>
-                        <q-item-label>{{item.name}}</q-item-label>
-                        <q-item-label
-                          caption
-                          v-if="key == 'weapons'"
-                        >ATQ {{item.atk}} PRC {{item.hit}}</q-item-label>
+                        <item-card
+                          :itemKey="key2"
+                          :itemType="key"
+                        />
                       </q-item-section>
                       <q-item-section side>
                         <q-btn
@@ -149,7 +148,10 @@
                           :disable="unit.owner !== userDetails.userId"
                           @click="buyItem(key, key2)"
                         />
-                        <div v-else>
+                        <div
+                          v-else
+                          class="q-mx-xs"
+                        >
                           Acheté
                         </div>
                       </q-item-section>
