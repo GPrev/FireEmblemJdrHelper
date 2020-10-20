@@ -39,16 +39,10 @@
       narrow-indicator
     >
       <q-tab
-        name="lv0"
-        label="Débutant"
-      />
-      <q-tab
-        name="lv1"
-        label="Intermédiaire"
-      />
-      <q-tab
-        name="lv2"
-        label="Avancé"
+        v-for="(tabName, tabKey) in tabList"
+        :key="tabKey"
+        :name="tabKey"
+        :label="tabName"
       />
     </q-tabs>
 
@@ -58,7 +52,11 @@
       v-model="tab"
       animated
     >
-      <q-tab-panel name="lv0">
+      <q-tab-panel
+        v-for="(tabName, tabKey) in tabList"
+        :key="tabKey"
+        :name="tabKey"
+      >
         <q-list
           bordered
           separator
@@ -66,50 +64,11 @@
           <q-item
             clickable
             v-ripple
-            v-for="(skill, key) in beginnerSkills"
-            :key="key"
+            v-for="skill in mastery.skills[tabKey]"
+            :key="skill"
           >
             <q-item-section>
-              <q-item-label>{{skill.name}}</q-item-label>
-              <q-item-label caption>{{skill.description}}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-tab-panel>
-
-      <q-tab-panel name="lv1">
-        <q-list
-          bordered
-          separator
-        >
-          <q-item
-            clickable
-            v-ripple
-            v-for="(skill, key) in intermediateSkills"
-            :key="key"
-          >
-            <q-item-section>
-              <q-item-label>{{skill.name}}</q-item-label>
-              <q-item-label caption>{{skill.description}}</q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-tab-panel>
-
-      <q-tab-panel name="lv2">
-        <q-list
-          bordered
-          separator
-        >
-          <q-item
-            clickable
-            v-ripple
-            v-for="(skill, key) in advancedSkills"
-            :key="key"
-          >
-            <q-item-section>
-              <q-item-label>{{skill.name}}</q-item-label>
-              <q-item-label caption>{{skill.description}}</q-item-label>
+              <skill-card :skillKey="skill" />
             </q-item-section>
           </q-item>
         </q-list>
@@ -122,9 +81,17 @@
 import { mapState, mapActions } from 'vuex'
 
 export default {
+  components: {
+    'skill-card': require('components/SkillCard.vue').default,
+  },
   data () {
     return {
-      tab: 'lv0'
+      tab: 'lv1',
+      tabList: {
+        lv1: 'Débutant',
+        lv2: 'Intermédiaire',
+        lv3: 'Avancé',
+      },
     }
   },
   methods: {
@@ -138,15 +105,6 @@ export default {
       payload.unit[path] = this.level + 1
       this.firebaseUpdateUnit(payload)
     },
-    getSkills (level) {
-      let myskills = {}
-      if (this.mastery.skills[level]) {
-        Object.keys(this.mastery.skills[level]).forEach(key => {
-          myskills[key] = this.skills[this.mastery.skills[level][key]];
-        })
-      }
-      return myskills
-    }
   },
   computed: {
     ...mapState('UnitStore', ['units']),
@@ -164,15 +122,6 @@ export default {
       }
       return level
     },
-    beginnerSkills () {
-      return this.getSkills('lv1')
-    },
-    intermediateSkills () {
-      return this.getSkills('lv2')
-    },
-    advancedSkills () {
-      return this.getSkills('lv3')
-    }
   }
 }
 </script>
