@@ -31,10 +31,17 @@
       />
       <up-down
         class=".col"
-        label="ATQ"
-        v-model="unit.stats.atk"
-        :min="bounds.atk.min"
-        :max="bounds.atk.max"
+        label="FOR"
+        v-model="unit.stats.str"
+        :min="bounds.str.min"
+        :max="bounds.str.max"
+      />
+      <up-down
+        class=".col"
+        label="MAG"
+        v-model="unit.stats.mag"
+        :min="bounds.mag.min"
+        :max="bounds.mag.max"
       />
       <up-down
         class=".col"
@@ -114,12 +121,14 @@ export default {
         picture: null,
         stats: {
           hpMax: 30,
-          atk: 25,
-          spd: 25,
-          skl: 25,
-          def: 25,
-          res: 25,
-          lck: 25,
+          str: 30,
+          mag: 30,
+          spd: 30,
+          skl: 30,
+          def: 30,
+          res: 30,
+          lck: 5,
+          mov: 3
         },
         masteries: { sword: 0 },
         items: {
@@ -131,12 +140,13 @@ export default {
       },
       bounds: {
         hpMax: { min: 25, max: 35 },
-        atk: { min: 22, max: 28 },
-        spd: { min: 22, max: 28 },
-        skl: { min: 22, max: 28 },
-        def: { min: 22, max: 28 },
-        res: { min: 22, max: 28 },
-        lck: { min: 22, max: 28 },
+        str: { min: 27, max: 33 },
+        mag: { min: 27, max: 33 },
+        spd: { min: 27, max: 33 },
+        skl: { min: 27, max: 33 },
+        def: { min: 27, max: 33 },
+        res: { min: 27, max: 33 },
+        lck: { min: 5, max: 5 },
       }
     }
   },
