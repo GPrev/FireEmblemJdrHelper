@@ -14,10 +14,43 @@
 
     <q-item-section>
       <q-item-label>{{skill.name}}</q-item-label>
+
       <q-item-label
         caption
         v-if="skill.description"
       >{{skill.description}}</q-item-label>
+
+      <q-item-label
+        caption
+        v-if="skill.type === 'styles'"
+      >
+        <div class="row">
+          <div class="col-3">
+            FOR : {{skill.stats.str}}
+          </div>
+          <div class="col-3">
+            MAG : {{skill.stats.mag}}
+          </div>
+          <div class="col-3">
+            VIT : {{skill.stats.spd}}
+          </div>
+          <div class="col-3">
+            TEC : {{skill.stats.skl}}
+          </div>
+          <div class="col-3">
+            DEF : {{skill.stats.def}}
+          </div>
+          <div class="col-3">
+            RES : {{skill.stats.res}}
+          </div>
+          <div class="col-3">
+            CHA : {{skill.stats.lck}}
+          </div>
+          <div class="col-3">
+            MOV : {{skill.stats.mov?skill.stats.mov:0}}
+          </div>
+        </div>
+      </q-item-label>
     </q-item-section>
   </q-item>
 </template>
