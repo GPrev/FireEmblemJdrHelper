@@ -214,7 +214,7 @@ export default {
       Object.keys(this.unit.masteries).forEach((masteryKey) => {
         let masteryLevel = this.unit.masteries[masteryKey]
         for (var i = 1; i <= masteryLevel; i++) {
-          let masterySkills = this.masteries[masteryKey].skills["lv" + masteryLevel]
+          let masterySkills = this.masteries[masteryKey].skills["lv" + i]
           for (var skillIndex in masterySkills) {
             let skillKey = masterySkills[skillIndex]
             let skill = this.skills[skillKey]
