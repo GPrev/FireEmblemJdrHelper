@@ -52,6 +52,28 @@
             MOV : {{stats.mov}}
           </div>
         </div>
+        <div class="row">
+          <template v-for="template in equipTemplate">
+            <div
+              v-for="i in template.count"
+              :key="template.subtype + i"
+              class=".col"
+            >
+              <q-avatar
+                size="xs"
+                v-if="template.type === 'skills' && skills[unit.equipment[template.subtype + '-' + i]]"
+              >
+                <img :src="skills[unit.equipment[template.subtype + '-' + i]].icon" />
+              </q-avatar>
+              <q-avatar
+                size="xs"
+                v-if="template.type === 'items' && items[template.subtype] && items[template.subtype][unit.equipment[template.subtype + '-' + i]]"
+              >
+                <img :src="items[template.subtype][unit.equipment[template.subtype + '-' + i]].icon" />
+              </q-avatar>
+            </div>
+          </template>
+        </div>
       </q-card-section>
     </q-card-section>
   </q-card>
@@ -62,9 +84,23 @@ import { mapState, mapActions } from 'vuex'
 
 export default {
   props: ['unit'],
+  data () {
+    return {
+      equipTemplate: [
+        { name: 'Armes', type: 'items', subtype: 'weapons', count: 2 },
+        { name: 'Armure', type: 'items', subtype: 'armours', count: 1 },
+        { name: 'Monture', type: 'items', subtype: 'mounts', count: 1 },
+        { name: 'Styles', type: 'skills', subtype: 'styles', count: 2 },
+        { name: 'Actions', type: 'skills', subtype: 'assists', count: 2 },
+        { name: 'Compétences', type: 'skills', subtype: 'skills', count: 2 },
+        { name: 'Critique', type: 'skills', subtype: 'crits', count: 1 },
+      ]
+    }
+  },
   computed: {
     ...mapState('UserStore', ['users']),
     ...mapState('StaticStore', ['skills']),
+    ...mapState('StaticStore', ['items']),
     ownerID () {
       if (this.unit.owner && this.users[this.unit.owner]) {
         return this.users[this.unit.owner].name
