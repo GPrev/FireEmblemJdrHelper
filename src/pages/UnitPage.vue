@@ -191,7 +191,9 @@ export default {
         { name: 'Armure', type: 'items', subtype: 'armours', count: 1 },
         { name: 'Monture', type: 'items', subtype: 'mounts', count: 1 },
         { name: 'Styles', type: 'skills', subtype: 'styles', count: 2 },
+        { name: 'Actions', type: 'skills', subtype: 'assists', count: 2 },
         { name: 'Compétences', type: 'skills', subtype: 'skills', count: 2 },
+        { name: 'Critique', type: 'skills', subtype: 'crits', count: 1 },
       ]
     }
   },
