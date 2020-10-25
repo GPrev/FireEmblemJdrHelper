@@ -36,7 +36,31 @@ const actions = {
 
 const mutations = {
     addUnit (state, payload) {
-        Vue.set(state.units, payload.unitID, payload.unitDetails)
+        let unitDetails = {
+            name: null,
+            picture: null,
+            stats: {
+                hpMax: 30,
+                str: 30,
+                mag: 30,
+                spd: 30,
+                skl: 30,
+                def: 30,
+                res: 30,
+                lck: 5,
+                mov: 3
+            },
+            masteries: {},
+            items: {
+                weapons: { none: true },
+                armours: { none: true },
+                mounts: { none: true }
+            },
+            equipment: {},
+        }
+        Object.assign(unitDetails, payload.unitDetails)
+        console.log(unitDetails)
+        Vue.set(state.units, payload.unitID, unitDetails)
     },
     updateUnit (state, payload) {
         Object.assign(state.units[payload.unitID], payload.unitDetails)
