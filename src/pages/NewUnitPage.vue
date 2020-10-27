@@ -119,7 +119,6 @@ export default {
       unit: {
         name: null,
         picture: null,
-        owner: null,
         stats: {
           hpMax: 30,
           str: 30,
@@ -137,7 +136,7 @@ export default {
           armors: { none: true },
           mounts: { none: true }
         },
-        equipment: { weapon: none },
+        equipment: { weapon: 'none' },
       },
       bounds: {
         hpMax: { min: 25, max: 35 },
