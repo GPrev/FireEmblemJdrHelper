@@ -12,7 +12,7 @@
         <q-rating
           size="18px"
           :value="level"
-          :max="3"
+          max="3"
           color="primary"
         />
       </div>
