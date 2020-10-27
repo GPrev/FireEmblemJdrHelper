@@ -68,7 +68,7 @@
                         </template>
 
                         <q-list
-                          v-if="unit.owner === userDetails.userId"
+                          v-if="unit.owner && unit.owner === userDetails.userId"
                           bordered
                           separator
                         >
@@ -142,7 +142,7 @@
                       </q-item-section>
                       <q-item-section side>
                         <q-btn
-                          v-if="!unit.items[key][key2]"
+                          v-if="!(unit.items[key] && unit.items[key][key2])"
                           dense
                           label="Acheter"
                           color="primary"
@@ -183,12 +183,12 @@ export default {
       tab: 'equip',
       itemTypes: {
         weapons: 'Armes',
-        armour: 'Armures',
+        armors: 'Armures',
         mounts: 'Montures',
       },
       equipTemplate: [
         { name: 'Armes', type: 'items', subtype: 'weapons', count: 2 },
-        { name: 'Armure', type: 'items', subtype: 'armours', count: 1 },
+        { name: 'Armure', type: 'items', subtype: 'armors', count: 1 },
         { name: 'Monture', type: 'items', subtype: 'mounts', count: 1 },
         { name: 'Styles', type: 'skills', subtype: 'styles', count: 2 },
         { name: 'Actions', type: 'skills', subtype: 'assists', count: 2 },
