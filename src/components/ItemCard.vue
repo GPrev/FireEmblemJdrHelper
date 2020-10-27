@@ -8,7 +8,10 @@
         v-if="item.icon"
         square
       >
-        <img :src="item.icon" />
+        <img
+          class="pixelated"
+          :src="item.icon"
+        />
       </q-avatar>
       <q-avatar
         v-else
@@ -93,5 +96,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus">
+.pixelated {
+  image-rendering: pixelated;
+}
 </style>

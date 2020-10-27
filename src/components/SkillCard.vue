@@ -5,7 +5,10 @@
   >
     <q-item-section avatar>
       <q-avatar v-if="skill.icon">
-        <img :src="skill.icon" />
+        <img
+          :src="skill.icon"
+          class="pixelated"
+        />
       </q-avatar>
       <q-avatar
         v-else
@@ -74,5 +77,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus">
+.pixelated {
+  image-rendering: pixelated;
+}
 </style>
