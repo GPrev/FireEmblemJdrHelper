@@ -16,11 +16,28 @@
         :rules="[ val => val && val.length > 0 || 'Merci de choisir un nom']"
       />
 
-      <q-input
-        filled
-        v-model="unit.picture"
-        label="Image du personnage"
-      />
+      <div class="row">
+        <q-img
+          class="col-2 q-mr-xs"
+          spinner-color="white"
+          :src="unit.picture"
+        >
+          <template v-slot:error>
+            <q-icon
+              class="absolute-center"
+              size="md"
+              name="image_not_supported"
+              color="primary"
+            />
+          </template>
+        </q-img>
+        <q-input
+          class="col"
+          filled
+          v-model="unit.picture"
+          label="Image du personnage"
+        />
+      </div>
 
       <up-down
         class=".col"
