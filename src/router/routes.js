@@ -8,6 +8,7 @@ const routes = [
       { path: '/auth', component: () => import('pages/AuthPage.vue') },
       { path: '/new', component: () => import('pages/NewUnitPage.vue') },
       { path: '/unit/:unitID', component: () => import('pages/UnitPage.vue') },
+      { path: '/unit/:unitID/edit', component: () => import('pages/NewUnitPage.vue') },
       { path: '/unit/:unitID/training/:masteryID', component: () => import('pages/MasteryPage.vue') },
     ]
   },

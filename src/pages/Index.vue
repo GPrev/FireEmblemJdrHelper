@@ -14,6 +14,22 @@
         :to="'/unit/' + key"
         v-ripple
       >
+        <q-menu
+          touch-position
+          context-menu
+        >
+          <q-list
+            dense
+            style="min-width: 100px"
+          >
+            <q-item
+              clickable
+              :to="'/unit/' + key + '/edit'"
+            >
+              <q-item-section>Modifier...</q-item-section>
+            </q-item>
+          </q-list>
+        </q-menu>
         <unit-card
           :unit="unit"
           class="full-width"

@@ -82,7 +82,7 @@
       <div class="row justify-end">
         <q-btn
           class=".col"
-          label="Créer"
+          :label="editMode?'Modifier':'Créer'"
           type="submit"
           color="primary"
         />
@@ -102,14 +102,31 @@ export default {
 
   computed: {
     ...mapState('UserStore', ['userDetails']),
+    ...mapState('UnitStore', ['units']),
+    editMode () {
+      return (this.$route.params.unitID) ? true : false
+    }
   },
 
   methods: {
-    ...mapActions('UnitStore', ['firebaseCreateUnit']),
+    ...mapActions('UnitStore', ['firebaseCreateUnit', 'firebaseUpdateUnit']),
     onSubmit () {
-      this.unit.owner = this.userDetails.userId
-      this.unit.hpCur = this.unit.stats.hpMax
-      this.firebaseCreateUnit({ unit: this.unit })
+      if (this.editMode) {
+        let payload = {
+          key: this.unit.id,
+          unit: {
+            'name': this.unit.name,
+            'picture': this.unit.picture,
+            'stats': this.unit.stats
+          }
+        }
+        this.firebaseUpdateUnit(payload)
+      }
+      else {
+        this.unit.owner = this.userDetails.userId
+        this.unit.hpCur = this.unit.stats.hpMax
+        this.firebaseCreateUnit({ unit: this.unit })
+      }
       this.$router.push('/')
     }
   },
@@ -152,7 +169,18 @@ export default {
   },
 
   mounted () {
-    this.unit.owner = this.userDetails.userId
+    if (this.editMode) {
+      // Edit
+      let editedUnit = this.units[this.$route.params.unitID]
+      this.unit.name = editedUnit.name
+      this.unit.id = editedUnit.id
+      this.unit.picture = editedUnit.picture
+      this.unit.stats = Object.assign(this.unit.stats, editedUnit.stats)
+    }
+    else {
+      // New
+      this.unit.owner = this.userDetails.userId
+    }
   }
 }
 </script>
