@@ -34,6 +34,7 @@
       >
         <q-tab-panel name="equip">
           <q-list
+            v-if="unit"
             bordered
             separator
           >
@@ -68,7 +69,7 @@
                         </template>
 
                         <q-list
-                          v-if="unit.owner && unit.owner === userDetails.userId"
+                          v-if="unit && unit.owner && unit.owner === userDetails.userId"
                           bordered
                           separator
                         >

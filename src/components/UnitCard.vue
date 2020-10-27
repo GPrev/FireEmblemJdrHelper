@@ -1,6 +1,9 @@
 <template>
   <q-card class="my-card">
-    <q-card-section horizontal>
+    <q-card-section
+      horizontal
+      v-if="unit"
+    >
       <q-img
         class="col-5"
         :src="picture"
@@ -108,14 +111,14 @@ export default {
       else return ""
     },
     picture () {
-      if (this.unit.picture) {
+      if (this.unit && this.unit.picture) {
         return this.unit.picture
       }
       else return ""
     },
     equipedSkills () {
       let skillList = {}
-      if (this.unit.equipment) {
+      if (this.unit && this.unit.equipment) {
         Object.keys(this.unit.equipment).forEach((equipKey) => {
           let equipValue = this.unit.equipment[equipKey]
           if (this.skills[equipValue]) {
@@ -126,15 +129,18 @@ export default {
       return skillList
     },
     stats () {
-      let mystats = Object.assign({}, this.unit.stats)
-      Object.keys(this.equipedSkills).forEach((equipKey) => {
-        let skill = this.equipedSkills[equipKey]
-        if (skill.condition && skill.stats && skill.condition === "always") {
-          Object.keys(skill.stats).forEach((statsKey) => {
-            mystats[statsKey] += skill.stats[statsKey]
-          })
-        }
-      })
+      let mystats = {}
+      if (this.unit && this.unit.stats) {
+        mystats = Object.assign({}, this.unit.stats)
+        Object.keys(this.equipedSkills).forEach((equipKey) => {
+          let skill = this.equipedSkills[equipKey]
+          if (skill.condition && skill.stats && skill.condition === "always") {
+            Object.keys(skill.stats).forEach((statsKey) => {
+              mystats[statsKey] += skill.stats[statsKey]
+            })
+          }
+        })
+      }
       return mystats
     },
     hpCur () {
