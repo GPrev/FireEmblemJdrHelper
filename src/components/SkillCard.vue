@@ -12,7 +12,7 @@
       </q-avatar>
       <q-avatar
         v-else
-        icon="help"
+        icon="not_interested"
         color="primary"
         text-color="white"
       />

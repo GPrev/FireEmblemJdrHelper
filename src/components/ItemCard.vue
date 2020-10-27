@@ -15,14 +15,24 @@
       </q-avatar>
       <q-avatar
         v-else
-        icon="help"
+        icon="not_interested"
         color="primary"
         text-color="white"
       />
     </q-item-section>
 
     <q-item-section>
-      <q-item-label>{{item.name}}</q-item-label>
+      <q-item-label class="row">
+        <div class=".col">{{item.name}}
+        </div>
+        <q-rating
+          v-if="item && item.level"
+          class=".col q-mx-sm"
+          :value="parseInt(item.level)"
+          max="3"
+          color="primary"
+        />
+      </q-item-label>
       <q-item-label
         class="row"
         caption
