@@ -7,7 +7,7 @@
       <q-img
         class="col-5"
         :src="picture"
-        :ratio="1"
+        height="180px"
         contain
       />
       <q-card-section
