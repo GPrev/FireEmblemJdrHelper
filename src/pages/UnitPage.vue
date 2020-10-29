@@ -121,9 +121,9 @@
             <q-expansion-item
               group="shopgroup"
               header-class="text-primary"
-              v-for="(type, key) in itemTypes"
-              :key="key"
-              :label="type"
+              v-for="category in itemCategories"
+              :key="category.key"
+              :label="category.name"
             >
               <q-card>
                 <q-card-section>
@@ -132,23 +132,23 @@
                     separator
                   >
                     <q-item
-                      v-for="(item, key2) in items[key]"
-                      :key="key2"
+                      v-for="(item, itemKey) in itemsCategorized[category.key]"
+                      :key="itemKey"
                     >
                       <q-item-section>
                         <item-card
-                          :itemKey="key2"
-                          :itemType="key"
+                          :itemKey="itemKey"
+                          :itemType="category.subtype"
                         />
                       </q-item-section>
                       <q-item-section side>
                         <q-btn
-                          v-if="!(unit.items[key] && unit.items[key][key2])"
+                          v-if="!(unit.items[category.subtype] && unit.items[category.subtype][itemKey])"
                           dense
                           label="Acheter"
                           color="primary"
                           :disable="unit.owner !== userDetails.userId"
-                          @click="buyItem(key, key2)"
+                          @click="buyItem(category.subtype, itemKey)"
                         />
                         <div
                           v-else
@@ -182,11 +182,22 @@ export default {
   data () {
     return {
       tab: 'equip',
-      itemTypes: {
-        weapons: 'Armes',
-        armors: 'Armures',
-        mounts: 'Montures',
-      },
+      itemCategories: [
+        { key: 'sword', subtype: 'weapons', name: 'Epées' },
+        { key: 'lance', subtype: 'weapons', name: 'Lances' },
+        { key: 'axe', subtype: 'weapons', name: 'Haches' },
+        { key: 'brawl', subtype: 'weapons', name: 'Gantelets' },
+        { key: 'bow', subtype: 'weapons', name: 'Arcs' },
+        { key: 'dagger', subtype: 'weapons', name: 'Dagues' },
+        { key: 'anima', subtype: 'weapons', name: 'Tomes anima' },
+        { key: 'light', subtype: 'weapons', name: 'Tomes de lumière' },
+        { key: 'dark', subtype: 'weapons', name: 'Tomes de ténèbres' },
+        { key: 'heavy', subtype: 'armors', name: 'Armures lourdes' },
+        { key: 'magic', subtype: 'armors', name: 'Armures magiques' },
+        { key: 'horse', subtype: 'mounts', name: 'Chevaux' },
+        { key: 'pegasus', subtype: 'mounts', name: 'Pégases' },
+        { key: 'wyvern', subtype: 'mounts', name: 'Wyvernes' },
+      ],
       equipTemplate: [
         { name: 'Armes', type: 'items', subtype: 'weapons', count: 2 },
         { name: 'Armure', type: 'items', subtype: 'armors', count: 1 },
@@ -206,6 +217,23 @@ export default {
     ...mapState('StaticStore', ['skills']),
     unit () {
       return this.units[this.$route.params.unitID]
+    },
+    itemsCategorized () {
+      let myitems = {}
+      Object.keys(this.items).forEach((itemType) => {
+        console.log(itemType)
+        Object.keys(this.items[itemType]).forEach((itemKey) => {
+          console.log(itemKey)
+          let item = this.items[itemType][itemKey]
+          let category = item.type ? item.type : itemType
+          if (myitems[category] === undefined) {
+            myitems[category] = {}
+          }
+          myitems[category][itemKey] = item
+        })
+      })
+      console.log(myitems)
+      return myitems
     },
     inventory () {
       if (this.unit === undefined) {
