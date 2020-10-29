@@ -105,10 +105,10 @@
           <div class="row justify-around">
             <mastery-card
               class="col-3"
-              v-for="(mastery, key) in masteries"
-              :key="key"
+              v-for="masteryKey in masteriesOrder"
+              :key="masteryKey"
               :unit="unit"
-              :mastery="mastery"
+              :mastery="masteries[masteryKey]"
             />
           </div>
         </q-tab-panel>
@@ -217,6 +217,14 @@ export default {
     ...mapState('StaticStore', ['skills']),
     unit () {
       return this.units[this.$route.params.unitID]
+    },
+    masteriesOrder () {
+      let myMasteries = {}
+      Object.keys(this.masteries).forEach((masteryKey) => {
+        let mastery = this.masteries[masteryKey]
+        myMasteries[mastery.index] = masteryKey
+      })
+      return myMasteries
     },
     itemsCategorized () {
       let myitems = {}
