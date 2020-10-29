@@ -19,7 +19,10 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label>{{skill.name}}</q-item-label>
+      <q-item-label class="row items-center justify-center">
+        <div class="col">{{skill.name}}</div>
+        <div class=".col text-caption text-italic">{{skillTypes[skill.type]}}</div>
+      </q-item-label>
 
       <q-item-label
         caption
@@ -60,6 +63,12 @@ export default {
         res: "RES",
         lck: "CHA",
         mov: "MOV",
+      },
+      skillTypes: {
+        styles: "Style",
+        assists: "Action",
+        skills: "Compétence",
+        crits: "Critique",
       }
     }
   },
