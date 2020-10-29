@@ -7,53 +7,51 @@
       <q-img
         class="col-5"
         :src="picture"
+        :ratio="1"
+        contain
       />
       <q-card-section
         vertical
-        class="col"
+        class="col q-pa-sm"
       >
-        <div class="row justify-between">
-          <div>
+        <div class="row justify-between items-center">
+          <div class="text-h5">
             {{unit.name}}
           </div>
-          <div>
+          <div class="text-caption">
             {{ownerID}}
           </div>
         </div>
-        <div>
-          HP : {{hpCur}}/{{stats.hpMax}}
-        </div>
-        <div class="row">
-          <div class="col">
-            FOR : {{stats.str}}
+        <q-linear-progress
+          class="q-my-xs"
+          size="20px"
+          rounded
+          :value="hpCur/stats.hpMax"
+          color="primary"
+        >
+          <div class="absolute-full flex flex-center">
+            <q-badge
+              color="white"
+              text-color="black"
+              :label="'HP : '+hpCur+'/'+stats.hpMax"
+            />
           </div>
-          <div class="col">
-            MAG : {{stats.mag}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            VIT : {{stats.spd}}
-          </div>
-          <div class="col">
-            TEC : {{stats.skl}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            DEF : {{stats.def}}
-          </div>
-          <div class="col">
-            RES : {{stats.res}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            CHA : {{stats.lck}}
-          </div>
-          <div class="col">
-            MOV : {{stats.mov}}
-          </div>
+        </q-linear-progress>
+        <div class="row justify-between">
+          <template v-for="(statName, statKey) in statNames">
+            <div
+              :key="statKey+'_label'"
+              class="col-3"
+            >{{statName}}</div>
+            <div
+              :key="statKey+'_value'"
+              class="col-1 text-right"
+            >{{stats[statKey]}}</div>
+            <div
+              :key="statKey+'_space'"
+              class="col-1"
+            />
+          </template>
         </div>
         <div class="row">
           <template v-for="template in equipTemplate">
@@ -89,6 +87,16 @@ export default {
   props: ['unit'],
   data () {
     return {
+      statNames: {
+        str: "FOR",
+        mag: "MAG",
+        spd: "VIT",
+        skl: "TEC",
+        def: "DEF",
+        res: "RES",
+        lck: "CHA",
+        mov: "MOV",
+      },
       equipTemplate: [
         { name: 'Armes', type: 'items', subtype: 'weapons', count: 2 },
         { name: 'Armure', type: 'items', subtype: 'armours', count: 1 },
