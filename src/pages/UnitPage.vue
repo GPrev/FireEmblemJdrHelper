@@ -221,9 +221,7 @@ export default {
     itemsCategorized () {
       let myitems = {}
       Object.keys(this.items).forEach((itemType) => {
-        console.log(itemType)
         Object.keys(this.items[itemType]).forEach((itemKey) => {
-          console.log(itemKey)
           let item = this.items[itemType][itemKey]
           let category = item.type ? item.type : itemType
           if (myitems[category] === undefined) {
@@ -232,7 +230,6 @@ export default {
           myitems[category][itemKey] = item
         })
       })
-      console.log(myitems)
       return myitems
     },
     inventory () {
