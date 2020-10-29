@@ -19,6 +19,7 @@
       :value="level"
       :max="3"
       color="primary"
+      readonly
     />
 
   </q-card>

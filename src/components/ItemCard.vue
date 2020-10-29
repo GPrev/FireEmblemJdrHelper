@@ -31,6 +31,7 @@
           :value="parseInt(item.level)"
           max="3"
           color="primary"
+          readonly
         />
       </q-item-label>
       <q-item-label
