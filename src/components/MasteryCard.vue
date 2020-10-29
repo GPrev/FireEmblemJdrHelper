@@ -1,6 +1,6 @@
 <template>
   <q-card
-    class="q-pa-md q-ma-xs"
+    class="q-py-md q-ma-xs col items-center"
     clickable
     v-ripple
     @click="() => { if(this.unit.owner === this.userDetails.userId) $router.push(this.unit.id + '/training/' + mastery.id) }"
@@ -11,16 +11,18 @@
       </q-avatar>
     </div>
 
-    <div class="row justify-center">{{mastery.name}}</div>
+    <div class="text-center">{{mastery.name}}</div>
 
-    <q-rating
-      class="row"
-      size="18px"
-      :value="level"
-      :max="3"
-      color="primary"
-      readonly
-    />
+    <div class="row justify-center">
+      <q-rating
+        class="row"
+        size="18px"
+        :value="level"
+        :max="3"
+        color="primary"
+        readonly
+      />
+    </div>
 
   </q-card>
 </template>
