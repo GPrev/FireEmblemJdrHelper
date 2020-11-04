@@ -88,7 +88,7 @@ export default {
     npcs () {
       let unitsFiltered = {}
       Object.keys(this.units).forEach(key => {
-        if (this.units[key].owner !== this.userDetails.userId) {
+        if (this.units[key].owner !== this.userDetails.userId && !this.units[key].hidden) {
           unitsFiltered[key] = this.units[key];
         }
       })
