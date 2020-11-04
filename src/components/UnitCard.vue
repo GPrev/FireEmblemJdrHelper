@@ -110,8 +110,7 @@ export default {
   },
   computed: {
     ...mapState('UserStore', ['users']),
-    ...mapState('StaticStore', ['skills']),
-    ...mapState('StaticStore', ['items']),
+    ...mapState('StaticStore', ['skills', 'items']),
     ownerID () {
       if (this.unit.owner && this.users[this.unit.owner]) {
         return this.users[this.unit.owner].name

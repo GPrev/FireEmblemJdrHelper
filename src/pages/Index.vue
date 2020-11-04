@@ -1,61 +1,99 @@
 <template>
-  <q-page class="flex flex-center">
-    <q-list
-      bordered
-      class="full-width"
-    >
-      <q-item-label header>Vos personnages</q-item-label>
+  <q-page class="flex">
 
-      <q-item
-        v-for="(unit, key) in pcs"
-        :key="unit.id"
-        class="q-my-sm"
-        clickable
-        :to="'/unit/' + key"
-        v-ripple
+    <div class="full-width">
+      <q-tabs
+        v-model="tab"
+        dense
+        class="text-grey"
+        active-color="primary"
+        indicator-color="primary"
+        align="justify"
+        narrow-indicator
       >
-        <q-menu
-          touch-position
-          context-menu
-        >
-          <q-list
-            dense
-            style="min-width: 100px"
-          >
-            <q-item
-              clickable
-              :to="'/unit/' + key + '/edit'"
-            >
-              <q-item-section>Modifier...</q-item-section>
-            </q-item>
-          </q-list>
-        </q-menu>
-        <unit-card
-          :unit="unit"
-          class="full-width"
+        <q-tab
+          name="units"
+          label="Unités"
         />
-      </q-item>
+        <q-tab
+          name="battle"
+          label="Combat"
+        />
+      </q-tabs>
 
       <q-separator />
-      <q-item-label header>Autres personnages</q-item-label>
 
-      <q-item
-        v-for="(unit, key) in npcs"
-        :key="unit.id"
-        class="q-my-sm"
-        clickable
-        :to="'/unit/' + key"
-        v-ripple
+      <q-tab-panels
+        v-model="tab"
+        animated
       >
-        <unit-card
-          :unit="unit"
-          class="full-width"
-        />
-      </q-item>
 
-    </q-list>
+        <q-tab-panel
+          name="units"
+          class="q-px-none"
+        >
+          <q-list bordered>
+            <q-item-label header>Vos personnages</q-item-label>
+
+            <q-item
+              v-for="(unit, key) in pcs"
+              :key="unit.id"
+              class="q-my-sm"
+              clickable
+              :to="'/unit/' + key"
+              v-ripple
+            >
+              <q-menu
+                touch-position
+                context-menu
+              >
+                <q-list
+                  dense
+                  style="min-width: 100px"
+                >
+                  <q-item
+                    clickable
+                    :to="'/unit/' + key + '/edit'"
+                  >
+                    <q-item-section>Modifier...</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+              <unit-card
+                :unit="unit"
+                class="full-width"
+              />
+            </q-item>
+
+            <q-separator />
+            <q-item-label header>Autres personnages</q-item-label>
+
+            <q-item
+              v-for="(unit, key) in npcs"
+              :key="unit.id"
+              class="q-my-sm"
+              clickable
+              :to="'/unit/' + key"
+              v-ripple
+            >
+              <unit-card
+                :unit="unit"
+                class="full-width"
+              />
+            </q-item>
+
+          </q-list>
+        </q-tab-panel>
+
+        <q-tab-panel name="battle">
+          <battle-sim />
+        </q-tab-panel>
+
+      </q-tab-panels>
+    </div>
 
     <q-page-sticky
+      v-if="tab === 'units'"
       position="bottom-right"
       :offset="[18, 18]"
     >
@@ -73,6 +111,11 @@
 import { mapState, mapActions } from 'vuex'
 
 export default {
+  data () {
+    return {
+      tab: 'units'
+    }
+  },
   computed: {
     ...mapState('UserStore', ['userDetails']),
     ...mapState('UnitStore', ['units']),
@@ -96,7 +139,8 @@ export default {
     },
   },
   components: {
-    'unit-card': require('components/UnitCard').default
+    'unit-card': require('components/UnitCard').default,
+    'battle-sim': require('components/BattleSim').default
   },
 }
 </script>
