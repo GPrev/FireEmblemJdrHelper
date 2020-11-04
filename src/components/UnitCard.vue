@@ -169,7 +169,9 @@ export default {
       return mystats
     },
     hpCur () {
-      return Math.min(this.unit.hpCur, this.stats.hpMax)
+      // Temporary : HP cannot be changed in UI so forced to max
+      //return Math.min(this.unit.hpCur, this.stats.hpMax)
+      return this.stats.hpMax
     }
   },
 }
