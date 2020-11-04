@@ -150,7 +150,7 @@ export default {
           }
         })
         // Equipement
-        if (this.unit && this.unit.equipment && this.unit.equipment['armors-1']) {
+        if (this.unit && this.unit.equipment && this.unit.equipment['armors-1'] && this.items.armors) {
           let armor = this.items.armors[this.unit.equipment['armors-1']]
           if (armor && armor.stats) {
             Object.keys(armor.stats).forEach((statsKey) => {
@@ -158,7 +158,7 @@ export default {
             })
           }
         }
-        if (this.unit && this.unit.equipment && this.unit.equipment['mounts-1']) {
+        if (this.unit && this.unit.equipment && this.unit.equipment['mounts-1'] && this.items.mounts) {
           let mount = this.items.mounts[this.unit.equipment['mounts-1']]
           if (mount && mount.stats) {
             Object.keys(mount.stats).forEach((statsKey) => {
