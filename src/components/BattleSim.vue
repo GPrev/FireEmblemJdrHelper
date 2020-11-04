@@ -209,9 +209,53 @@ export default {
         physical: weapon && weapon.damage === 'PHYS'
       }
     },
-    attackStats () {
+    attackerCombatBuffs () {
+      let mySkills = this.attackerSkills
+      let buffs = { str: 0, mag: 0, spd: 0, skl: 0, def: 0, res: 0, lck: 0 }
+      Object.keys(mySkills).forEach((equipKey) => {
+        let skill = mySkills[equipKey]
+        if (skill.condition && skill.stats && skill.condition === "attacking") {
+          Object.keys(skill.stats).forEach((statsKey) => {
+            buffs[statsKey] += skill.stats[statsKey]
+          })
+        }
+      })
+      return buffs
+    },
+    defenderCombatBuffs () {
+      let mySkills = this.defenderSkills
+      let buffs = { str: 0, mag: 0, spd: 0, skl: 0, def: 0, res: 0, lck: 0 }
+      Object.keys(mySkills).forEach((equipKey) => {
+        let skill = mySkills[equipKey]
+        if (skill.condition && skill.stats && skill.condition === "attacked") {
+          Object.keys(skill.stats).forEach((statsKey) => {
+            buffs[statsKey] += skill.stats[statsKey]
+          })
+        }
+      })
+      return buffs
+    },
+    attackerStatsBuffed () {
       let myStats = this.attackerStats;
-      let otherStats = this.defenderStats;
+      let myBuffs = this.attackerCombatBuffs;
+      let res = {}
+      Object.keys(myStats).forEach((statsKey) => {
+        res[statsKey] = myStats[statsKey] + myBuffs[statsKey]
+      })
+      return res
+    },
+    defenderStatsBuffed () {
+      let myStats = this.defenderStats;
+      let myBuffs = this.defenderCombatBuffs;
+      let res = {}
+      Object.keys(myStats).forEach((statsKey) => {
+        res[statsKey] = myStats[statsKey] + myBuffs[statsKey]
+      })
+      return res
+    },
+    attackStats () {
+      let myStats = this.attackerStatsBuffed;
+      let otherStats = this.defenderStatsBuffed;
       let myWeapon = this.attackerWeapon;
       let otherWeapon = this.defenderWeapon;
       let result = {
@@ -230,8 +274,8 @@ export default {
       return result;
     },
     defenseStats () {
-      let myStats = this.defenderStats;
-      let otherStats = this.attackerStats;
+      let myStats = this.defenderStatsBuffed;
+      let otherStats = this.attackerStatsBuffed;
       let myWeapon = this.defenderWeapon;
       let otherWeapon = this.attackerWeapon;
       let result = {
