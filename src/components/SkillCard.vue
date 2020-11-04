@@ -30,19 +30,26 @@
       >{{skill.description}}</q-item-label>
 
       <q-item-label
-        caption
         v-if="skill.type === 'styles'"
+        class="row justify-between"
+        caption
       >
-        <div class="row">
+        <template v-for="(statName, statKey) in allStatNames">
           <div
-            class="col-3"
-            v-for="(statName, statKey) in statNames"
-            :key="statKey"
-          >
-            {{statName}} : {{skill.stats[statKey]?skill.stats[statKey]:0}}
-          </div>
-        </div>
+            :key="statKey+'_label'"
+            class="col-2"
+          >{{statName}}</div>
+          <div
+            :key="statKey+'_value'"
+            class="col-1 text-right"
+          >{{skill.stats[statKey]?skill.stats[statKey]:0}}</div>
+          <div
+            :key="statKey+'_space'"
+            class="col-1"
+          />
+        </template>
       </q-item-label>
+
     </q-item-section>
   </q-item>
 </template>
@@ -54,14 +61,15 @@ export default {
   props: ['skillKey'],
   data () {
     return {
-      statNames: {
+      allStatNames: {
+        hpMax: "HP",
         str: "FOR",
         mag: "MAG",
         spd: "VIT",
         skl: "TEC",
+        lck: "CHA",
         def: "DEF",
         res: "RES",
-        lck: "CHA",
         mov: "MOV",
       },
       skillTypes: {

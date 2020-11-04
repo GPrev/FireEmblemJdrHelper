@@ -47,24 +47,38 @@
           class="col-6"
           v-else
         >Physique</div>
-        <div class="col-6">POR {{item['por-min']}} - {{item['por-max']}}</div>
-        <div class="col-6">ATQ {{item.atk}}</div>
-        <div class="col-6">PRC {{item.hit}}</div>
-        <div class="col-6">CRIT {{item.crit}}</div>
-        <div class="col-6">VIT {{item.spd}}</div>
+        <div class="col-3">POR</div>
+        <div class="col-2 text-right">{{item['por-min']}} - {{item['por-max']}}</div>
+        <div class="col-3">ATQ</div>
+        <div class="col-2 text-right">{{item.atk}}</div>
+        <div class="col-1" />
+        <div class="col-3">PRC</div>
+        <div class="col-2 text-right">{{item.hit}}</div>
+        <div class="col-3">CRIT</div>
+        <div class="col-2 text-right">{{item.crit}}</div>
+        <div class="col-1" />
+        <div class="col-3">VIT</div>
+        <div class="col-2 text-right">{{item.spd}}</div>
       </q-item-label>
       <q-item-label
         v-if="itemType !== 'weapons' && item.stats"
-        class="row"
+        class="row justify-between"
         caption
       >
-        <div
-          class="col-6"
-          v-for="(statName, statKey) in statNames"
-          :key="statKey"
-        >
-          {{statName}} : {{item.stats[statKey]?item.stats[statKey]:0}}
-        </div>
+        <template v-for="(statName, statKey) in allStatNames">
+          <div
+            :key="statKey+'_label'"
+            class="col-2"
+          >{{statName}}</div>
+          <div
+            :key="statKey+'_value'"
+            class="col-1 text-right"
+          >{{item.stats[statKey]?item.stats[statKey]:0}}</div>
+          <div
+            :key="statKey+'_space'"
+            class="col-1"
+          />
+        </template>
       </q-item-label>
       <q-item-label
         caption
@@ -81,14 +95,15 @@ export default {
   props: ['itemType', 'itemKey'],
   data () {
     return {
-      statNames: {
+      allStatNames: {
+        hpMax: "HP",
         str: "FOR",
         mag: "MAG",
         spd: "VIT",
         skl: "TEC",
+        lck: "CHA",
         def: "DEF",
         res: "RES",
-        lck: "CHA",
         mov: "MOV",
       }
     }
