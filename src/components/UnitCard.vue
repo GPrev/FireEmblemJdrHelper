@@ -99,7 +99,7 @@ export default {
       },
       equipTemplate: [
         { name: 'Armes', type: 'items', subtype: 'weapons', count: 2 },
-        { name: 'Armure', type: 'items', subtype: 'armours', count: 1 },
+        { name: 'Armure', type: 'items', subtype: 'armors', count: 1 },
         { name: 'Monture', type: 'items', subtype: 'mounts', count: 1 },
         { name: 'Styles', type: 'skills', subtype: 'styles', count: 2 },
         { name: 'Actions', type: 'skills', subtype: 'assists', count: 2 },
@@ -140,6 +140,7 @@ export default {
       let mystats = {}
       if (this.unit && this.unit.stats) {
         mystats = Object.assign({}, this.unit.stats)
+        // Skills
         Object.keys(this.equipedSkills).forEach((equipKey) => {
           let skill = this.equipedSkills[equipKey]
           if (skill.condition && skill.stats && skill.condition === "always") {
@@ -148,6 +149,23 @@ export default {
             })
           }
         })
+        // Equipement
+        if (this.unit && this.unit.equipment && this.unit.equipment['armors-1']) {
+          let armor = this.items.armors[this.unit.equipment['armors-1']]
+          if (armor && armor.stats) {
+            Object.keys(armor.stats).forEach((statsKey) => {
+              mystats[statsKey] += armor.stats[statsKey]
+            })
+          }
+        }
+        if (this.unit && this.unit.equipment && this.unit.equipment['mounts-1']) {
+          let mount = this.items.mounts[this.unit.equipment['mounts-1']]
+          if (mount && mount.stats) {
+            Object.keys(mount.stats).forEach((statsKey) => {
+              mystats[statsKey] += mount.stats[statsKey]
+            })
+          }
+        }
       }
       return mystats
     },
