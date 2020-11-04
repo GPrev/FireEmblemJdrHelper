@@ -190,6 +190,7 @@ export default {
         spd: weapon ? parseInt(weapon.spd) : 0,
         hit: weapon ? parseInt(weapon.hit.replace(/%/g, '')) : 0,
         crit: weapon ? parseInt(weapon.crit.replace(/%/g, '')) : 0,
+        physical: weapon && weapon.damage === 'PHYS'
       }
     },
     defenderWeapon () {
@@ -205,6 +206,7 @@ export default {
         spd: weapon ? parseInt(weapon.spd) : 0,
         hit: weapon ? parseInt(weapon.hit.replace(/%/g, '')) : 0,
         crit: weapon ? parseInt(weapon.crit.replace(/%/g, '')) : 0,
+        physical: weapon && weapon.damage === 'PHYS'
       }
     },
     attackStats () {
@@ -213,10 +215,17 @@ export default {
       let myWeapon = this.attackerWeapon;
       let otherWeapon = this.defenderWeapon;
       let result = {
-        mnt: Math.max(0, myWeapon.atk + myStats.str - otherStats.def),
+        mntPhys: Math.max(0, myWeapon.atk + myStats.str - otherStats.def),
+        mntMag: Math.max(0, myWeapon.atk + myStats.mag - otherStats.res),
         hit: Math.min(100, Math.max(0, myWeapon.hit + 3 * (myStats.skl - otherStats.skl))),
         crit: Math.max(0, myWeapon.crit + myStats.lck),
         double: (myWeapon.spd + myStats.spd > otherWeapon.spd + otherStats.spd + 3)
+      }
+      if (myWeapon.physical) {
+        result.mnt = result.mntPhys
+      }
+      else {
+        result.mnt = result.mntMag
       }
       return result;
     },
@@ -226,11 +235,19 @@ export default {
       let myWeapon = this.defenderWeapon;
       let otherWeapon = this.attackerWeapon;
       let result = {
-        mnt: Math.max(0, myWeapon.atk + myStats.str - otherStats.def),
+        mntPhys: Math.max(0, myWeapon.atk + myStats.str - otherStats.def),
+        mntMag: Math.max(0, myWeapon.atk + myStats.mag - otherStats.res),
         hit: Math.min(100, Math.max(0, myWeapon.hit + 3 * (myStats.skl - otherStats.skl))),
         crit: Math.max(0, myWeapon.crit + myStats.lck),
         double: (myWeapon.spd + myStats.spd > otherWeapon.spd + otherStats.spd + 3)
       }
+      if (myWeapon.physical) {
+        result.mnt = result.mntPhys
+      }
+      else {
+        result.mnt = result.mntMag
+      }
+      return result;
       return result;
     }
   },
