@@ -2,7 +2,10 @@
   <div class="col">
     <unit-picker v-model="attackerId" />
 
-    <q-card class="row justify-between q-ma-md q-pa-md">
+    <q-card
+      class="row justify-between q-ma-md q-pa-md"
+      :disabled="!(attacker && defender)"
+    >
       <battle-stats
         class="col-5"
         :unit="attacker"
