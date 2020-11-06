@@ -1,40 +1,50 @@
 <template>
-
-  <q-card class="full-width">
-    <q-expansion-item
-      group="unitgroup"
-      v-model="expanded"
-    >
-      <template v-slot:header>
-        <q-item-section>
-          <unit-card
-            v-if="unit"
-            :unit="unit"
-          />
-          <q-item-label v-else>Choisissez une unité</q-item-label>
-        </q-item-section>
-      </template>
-
-      <q-list
-        bordered
-        separator
+  <div>
+    <q-card class="full-width">
+      <q-item
+        v-if="unit"
+        class="q-ma-none q-pa-none"
+        clickable
+        v-ripple
+        @click="expand()"
       >
-        <q-item
+        <unit-card
+          class="full-width"
+          :unit="unit"
           clickable
           v-ripple
-          v-for="(unitVal, unitKey) in units"
-          :key="unitKey"
-          @click="pick(unitVal, unitKey)"
-        >
-          <unit-card
-            :unit="unitVal"
-            class="full-width"
-          />
-        </q-item>
-      </q-list>
-    </q-expansion-item>
-  </q-card>
+        />
+      </q-item>
+      <q-expansion-item
+        group="unitgroup"
+        v-model="expanded"
+      >
+        <template v-slot:header>
+          <q-item-section>
+            <q-item-label v-if="!unit">Choisissez une unité</q-item-label>
+          </q-item-section>
+        </template>
 
+        <q-list
+          bordered
+          separator
+        >
+          <q-item
+            clickable
+            v-ripple
+            v-for="(unitVal, unitKey) in units"
+            :key="unitKey"
+            @click="pick(unitVal, unitKey)"
+          >
+            <unit-card
+              :unit="unitVal"
+              class="full-width"
+            />
+          </q-item>
+        </q-list>
+      </q-expansion-item>
+    </q-card>
+  </div>
 </template>
 
 <script>
@@ -89,6 +99,10 @@ export default {
     pick (unitVal, unitKey) {
       this.myvalue = unitKey
       this.expanded = false
+    },
+    expand () {
+      console.log('expand')
+      this.expanded = !this.expanded
     }
   },
   components: {
