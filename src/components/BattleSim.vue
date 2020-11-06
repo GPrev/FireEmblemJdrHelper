@@ -92,18 +92,22 @@ export default {
       return this.addBuffs(this.defenderStats, this.defenderCombatBuffs)
     },
     attackStats () {
-      let myStats = this.attackerStatsBuffed;
-      let otherStats = this.defenderStatsBuffed;
-      let myWeapon = this.attackerWeapon;
-      let otherWeapon = this.defenderWeapon;
-      return this.getBattleStats(myStats, otherStats, myWeapon, otherWeapon, true);
+      let myStats = this.attackerStatsBuffed
+      let otherStats = this.defenderStatsBuffed
+      let myWeapon = this.attackerWeapon
+      let otherWeapon = this.defenderWeapon
+      let mySkills = this.attackerActiveSkills
+      let otherSkills = this.defenderActiveSkills
+      return this.getBattleStats(myStats, otherStats, myWeapon, otherWeapon, mySkills, otherSkills, true);
     },
     defenseStats () {
-      let myStats = this.defenderStatsBuffed;
-      let otherStats = this.attackerStatsBuffed;
-      let myWeapon = this.defenderWeapon;
-      let otherWeapon = this.attackerWeapon;
-      return this.getBattleStats(myStats, otherStats, myWeapon, otherWeapon, false);
+      let myStats = this.defenderStatsBuffed
+      let otherStats = this.attackerStatsBuffed
+      let myWeapon = this.defenderWeapon
+      let otherWeapon = this.attackerWeapon
+      let mySkills = this.defenderActiveSkills
+      let otherSkills = this.attackerActiveSkills
+      return this.getBattleStats(myStats, otherStats, myWeapon, otherWeapon, mySkills, otherSkills, false);
     }
   },
   methods: {
@@ -130,15 +134,18 @@ export default {
       let skillList = {}
       Object.keys(unitSkills).forEach((skillKey) => {
         let skill = unitSkills[skillKey]
-        if (skill.condition) {
+        // Skills with stats that are always active are already in the unit stats
+        if (!(skill.stats && skill.condition === "always") && skill.condition) {
           let conditions = skill.condition.split(" ")
+          console.log(skill.name, conditions)
           let active = true
           conditions.forEach((condition) => {
             if (!(condition && (
+              condition === "always" ||
               (attacking && condition === "attacking") ||
               (!attacking && condition === "attacked") ||
-              (skill.condition === "hp-low" && (100 * unit.hpCur / unit.stats.hpMax) <= skill.threshold) ||
-              (skill.condition === "hp-high" && (100 * unit.hpCur / unit.stats.hpMax) >= skill.threshold) ||
+              ((condition === "hp-low") && ((100 * unit.hpCur / unit.stats.hpMax) <= skill.threshold)) ||
+              ((condition === "hp-high") && ((100 * unit.hpCur / unit.stats.hpMax) >= skill.threshold)) ||
               (enemyWeapon && condition === "close" && enemyWeapon["por-max"] < 2) ||
               (enemyWeapon && condition === "distant" && enemyWeapon["por-max"] > 1) ||
               (enemyWeapon && condition === enemyWeapon.type)
@@ -206,16 +213,44 @@ export default {
           })
         }
       })
-      console.log(unitSkills, buffs, attacking)
       return buffs
     },
-    getBattleStats (myStats, otherStats, myWeapon, otherWeapon, attacking) {
+    countSkillEffect (skills, effect) {
+      let count = 0
+      Object.keys(skills).forEach((skillKey) => {
+        let skill = skills[skillKey]
+        if (skill.effect === effect) {
+          count += 1
+        }
+      })
+      return count
+    },
+    getDoubleModifier (mySkills, otherSkills) {
+      let doubleModifier = 0
+      Object.keys(mySkills).forEach((skillKey) => {
+        let skill = mySkills[skillKey]
+        if (skill.effect === "double") {
+          doubleModifier += 1
+        }
+        else if (skill.effect === "no-double" || skill.effect === "windsweep") {
+          doubleModifier -= 1
+        }
+      })
+      // Enemy double negation applies
+      doubleModifier -= this.countSkillEffect(otherSkills, "no-double")
+
+      return doubleModifier
+    },
+    getBattleStats (myStats, otherStats, myWeapon, otherWeapon, mySkills, otherSkills, attacking) {
+      let doubleModifier = this.getDoubleModifier(mySkills, otherSkills)
+      let critCancelling = this.countSkillEffect(mySkills, "no-crit") + this.countSkillEffect(otherSkills, "no-crit")
       let result = {
         mntPhys: Math.max(0, myWeapon.atk + myStats.str - otherStats.def),
         mntMag: Math.max(0, myWeapon.atk + myStats.mag - otherStats.res),
         hit: Math.min(100, Math.max(0, myWeapon.hit + 3 * (myStats.skl - otherStats.skl))),
-        crit: Math.max(0, myWeapon.crit + myStats.lck),
-        double: (myWeapon.spd + myStats.spd > otherWeapon.spd + otherStats.spd + 3)
+        crit: (critCancelling > 0) ? 0 : Math.max(0, myWeapon.crit + myStats.lck),
+        double: (doubleModifier > 0) || ((doubleModifier == 0) &&
+          (myWeapon.spd + myStats.spd > otherWeapon.spd + otherStats.spd + 3))
       }
       if (myWeapon.magical) {
         result.mnt = result.mntMag
