@@ -137,7 +137,6 @@ export default {
         // Skills with stats that are always active are already in the unit stats
         if (!(skill.stats && skill.condition === "always") && skill.condition) {
           let conditions = skill.condition.split(" ")
-          console.log(skill.name, conditions)
           let active = true
           conditions.forEach((condition) => {
             if (!(condition && (
