@@ -138,7 +138,6 @@ export default {
       Object.keys(stats).forEach((statsKey) => {
         res[statsKey] = stats[statsKey] + (buffs[statsKey] ? buffs[statsKey] : 0)
       })
-      console.log(stats, buffs, res)
       return res
     },
     getSkills (unit) {
