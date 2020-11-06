@@ -8,15 +8,19 @@
     >
       <battle-stats
         class="col-5"
+        v-model="attackerWeaponSlot"
         :unit="attacker"
         :stats="attackStats"
+        :weapon="attackerWeapon"
         :valid="attacker && defender"
         :skills="attackerActiveSkills"
       />
       <battle-stats
         class="col-5"
+        v-model="defenderWeaponSlot"
         :unit="defender"
         :stats="defenseStats"
+        :weapon="defenderWeapon"
         :valid="attacker && defender"
         :skills="defenderActiveSkills"
       />
@@ -33,7 +37,9 @@ export default {
   data () {
     return {
       attackerId: null,
-      defenderId: null
+      defenderId: null,
+      attackerWeaponSlot: 'weapons-1',
+      defenderWeaponSlot: 'weapons-1'
     }
   },
   computed: {
@@ -74,10 +80,10 @@ export default {
       return this.getStats(this.defender, this.defenderSkills)
     },
     attackerWeapon () {
-      return this.getWeapon(this.attacker)
+      return this.getWeapon(this.attacker, this.attackerWeaponSlot)
     },
     defenderWeapon () {
-      return this.getWeapon(this.defender)
+      return this.getWeapon(this.defender, this.defenderWeaponSlot)
     },
     attackerCombatBuffs () {
       return this.getCombatBuffs(this.attackerActiveSkills, true)
@@ -196,10 +202,10 @@ export default {
       }
       return mystats
     },
-    getWeapon (unit) {
+    getWeapon (unit, weaponSlot) {
       let weapon = { atk: 0, spd: 0, hit: 0, crit: 0 }
-      if (unit && unit.equipment['weapons-1']) {
-        let weaponName = unit.equipment['weapons-1']
+      if (unit && unit.equipment[weaponSlot]) {
+        let weaponName = unit.equipment[weaponSlot]
         if (this.items.weapons[weaponName]) {
           weapon = this.items.weapons[weaponName]
         }
