@@ -11,14 +11,14 @@
         :unit="attacker"
         :stats="attackStats"
         :valid="attacker && defender"
-        :skills="attackerActiveSkillsNoStyles"
+        :skills="attackerActiveSkills"
       />
       <battle-stats
         class="col-5"
         :unit="defender"
         :stats="defenseStats"
         :valid="attacker && defender"
-        :skills="defenderActiveSkillsNoStyles"
+        :skills="defenderActiveSkills"
       />
     </q-card>
 
@@ -62,38 +62,16 @@ export default {
       return this.getSkills(this.defender)
     },
     attackerActiveSkills () {
-      return this.getActiveSkills(this.attacker, this.attackerSkills, true)
+      return this.getActiveSkills(this.attacker, this.attackerSkills, true, this.defenderWeapon)
     },
     defenderActiveSkills () {
-      return this.getActiveSkills(this.defender, this.defenderSkills, false)
-    },
-    attackerActiveSkillsNoStyles () {
-      let skills = this.attackerActiveSkills
-      let result = {}
-      Object.keys(skills).forEach((skillKey) => {
-        let skill = skills[skillKey]
-        if (skill.type === "skills") {
-          result[skillKey] = skills[skillKey]
-        }
-      })
-      return result
-    },
-    defenderActiveSkillsNoStyles () {
-      let skills = this.defenderActiveSkills
-      let result = {}
-      Object.keys(skills).forEach((skillKey) => {
-        let skill = skills[skillKey]
-        if (skill.type === "skills") {
-          result[skillKey] = skills[skillKey]
-        }
-      })
-      return result
+      return this.getActiveSkills(this.defender, this.defenderSkills, false, this.attackerWeapon)
     },
     attackerStats () {
-      return this.getStats(this.attacker, this.attackerActiveSkills)
+      return this.getStats(this.attacker, this.attackerSkills)
     },
     defenderStats () {
-      return this.getStats(this.defender, this.defenderActiveSkills)
+      return this.getStats(this.defender, this.defenderSkills)
     },
     attackerWeapon () {
       return this.getWeapon(this.attacker)
@@ -102,10 +80,10 @@ export default {
       return this.getWeapon(this.defender)
     },
     attackerCombatBuffs () {
-      return this.getCombatBuffs(this.attackerSkills, true)
+      return this.getCombatBuffs(this.attackerActiveSkills, true)
     },
     defenderCombatBuffs () {
-      return this.getCombatBuffs(this.defenderSkills, false)
+      return this.getCombatBuffs(this.defenderActiveSkills, false)
     },
     attackerStatsBuffed () {
       return this.addBuffs(this.attackerStats, this.attackerCombatBuffs)
@@ -152,17 +130,25 @@ export default {
       let skillList = {}
       Object.keys(unitSkills).forEach((skillKey) => {
         let skill = unitSkills[skillKey]
-        if (skill.condition && skill.stats && (
-          skill.condition === "always" ||
-          (attacking && skill.condition === "attacking") ||
-          (!attacking && skill.condition === "attacked") ||
-          (skill.condition === "hp-low" && (100 * unit.hpCur / unit.stats.hpMax) <= skill.threshold) ||
-          (skill.condition === "hp-high" && (100 * unit.hpCur / unit.stats.hpMax) >= skill.threshold) ||
-          (enemyWeapon && skill.condition === "close" && enemyWeapon.por - max < 2) ||
-          (enemyWeapon && skill.condition === "distant" && enemyWeapon.por - max > 1) ||
-          (enemyWeapon && skill.condition === enemyWeapon.type)
-        )) {
-          skillList[skillKey] = unitSkills[skillKey]
+        if (skill.condition) {
+          let conditions = skill.condition.split(" ")
+          let active = true
+          conditions.forEach((condition) => {
+            if (!(condition && (
+              (attacking && condition === "attacking") ||
+              (!attacking && condition === "attacked") ||
+              (skill.condition === "hp-low" && (100 * unit.hpCur / unit.stats.hpMax) <= skill.threshold) ||
+              (skill.condition === "hp-high" && (100 * unit.hpCur / unit.stats.hpMax) >= skill.threshold) ||
+              (enemyWeapon && condition === "close" && enemyWeapon["por-max"] < 2) ||
+              (enemyWeapon && condition === "distant" && enemyWeapon["por-max"] > 1) ||
+              (enemyWeapon && condition === enemyWeapon.type)
+            ))) {
+              active = false
+            }
+          })
+          if (active) {
+            skillList[skillKey] = unitSkills[skillKey]
+          }
         }
       })
       return skillList
@@ -214,15 +200,13 @@ export default {
       let buffs = { str: 0, mag: 0, spd: 0, skl: 0, def: 0, res: 0, lck: 0 }
       Object.keys(unitSkills).forEach((equipKey) => {
         let skill = unitSkills[equipKey]
-        if (skill.condition && skill.stats && (
-          (attacking && skill.condition === "attacking") ||
-          (!attacking && skill.condition === "defending")
-        )) {
+        if (skill.stats) {
           Object.keys(skill.stats).forEach((statsKey) => {
             buffs[statsKey] += skill.stats[statsKey]
           })
         }
       })
+      console.log(unitSkills, buffs, attacking)
       return buffs
     },
     getBattleStats (myStats, otherStats, myWeapon, otherWeapon, attacking) {
