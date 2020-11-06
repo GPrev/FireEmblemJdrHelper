@@ -92,22 +92,26 @@ export default {
       return this.addBuffs(this.defenderStats, this.defenderCombatBuffs)
     },
     attackStats () {
+      let me = this.attacker
+      let other = this.defender
       let myStats = this.attackerStatsBuffed
       let otherStats = this.defenderStatsBuffed
       let myWeapon = this.attackerWeapon
       let otherWeapon = this.defenderWeapon
       let mySkills = this.attackerActiveSkills
       let otherSkills = this.defenderActiveSkills
-      return this.getBattleStats(myStats, otherStats, myWeapon, otherWeapon, mySkills, otherSkills, true);
+      return this.getBattleStats(me, other, myStats, otherStats, myWeapon, otherWeapon, mySkills, otherSkills, true);
     },
     defenseStats () {
+      let me = this.defender
+      let other = this.attacker
       let myStats = this.defenderStatsBuffed
       let otherStats = this.attackerStatsBuffed
       let myWeapon = this.defenderWeapon
       let otherWeapon = this.attackerWeapon
       let mySkills = this.defenderActiveSkills
       let otherSkills = this.attackerActiveSkills
-      return this.getBattleStats(myStats, otherStats, myWeapon, otherWeapon, mySkills, otherSkills, false);
+      return this.getBattleStats(me, other, myStats, otherStats, myWeapon, otherWeapon, mySkills, otherSkills, false);
     }
   },
   methods: {
@@ -202,6 +206,41 @@ export default {
       }
       return weapon
     },
+    getArmor (unit) {
+      let item = null
+      if (unit && unit.equipment['armors-1']) {
+        let itemName = unit.equipment['armors-1']
+        if (this.items.armors[itemName]) {
+          item = this.items.armors[itemName]
+        }
+      }
+      return item
+    },
+    getMount (unit) {
+      let item = null
+      if (unit && unit.equipment['mounts-1']) {
+        let itemName = unit.equipment['mounts-1']
+        if (this.items.mounts[itemName]) {
+          item = this.items.mounts[itemName]
+        }
+      }
+      return item
+    },
+    getMountAndArmorWeakness (unit) {
+      let armor = this.getArmor(unit)
+      let mount = this.getMount(unit)
+      let weakness = {}
+      if (armor && armor.type === "heavy") {
+        weakness[armor.type] = true
+      }
+      if (mount && mount.type === "horse") {
+        weakness[mount.type] = true
+      }
+      else if (mount && mount.type) { // flying mount
+        weakness["flying"] = true
+      }
+      return weakness
+    },
     getCombatBuffs (unitSkills, attacking) {
       let buffs = { str: 0, mag: 0, spd: 0, skl: 0, def: 0, res: 0, lck: 0 }
       Object.keys(unitSkills).forEach((equipKey) => {
@@ -240,12 +279,28 @@ export default {
 
       return doubleModifier
     },
-    getBattleStats (myStats, otherStats, myWeapon, otherWeapon, mySkills, otherSkills, attacking) {
+    isWeak (unit, weapon) {
+      let result = false
+      let weakness = this.getMountAndArmorWeakness(unit)
+      if (weapon.effective) {
+        let effective = weapon.effective.split(" ")
+        effective.forEach(eff => {
+          if (weakness[eff]) {
+            result = true
+          }
+        })
+      }
+      return result
+    },
+    getBattleStats (me, other, myStats, otherStats, myWeapon, otherWeapon, mySkills, otherSkills, attacking) {
       let doubleModifier = this.getDoubleModifier(mySkills, otherSkills)
       let critCancelling = this.countSkillEffect(mySkills, "no-crit") + this.countSkillEffect(otherSkills, "no-crit")
+      let weak = this.isWeak(other, myWeapon)
+      let weakMultiplier = weak ? 2 : 1
       let result = {
-        mntPhys: Math.max(0, myWeapon.atk + myStats.str - otherStats.def),
-        mntMag: Math.max(0, myWeapon.atk + myStats.mag - otherStats.res),
+        mntPhys: weakMultiplier * Math.max(0, myWeapon.atk + myStats.str - otherStats.def),
+        mntMag: weakMultiplier * Math.max(0, myWeapon.atk + myStats.mag - otherStats.res),
+        weak: weak,
         hit: Math.min(100, Math.max(0, myWeapon.hit + 3 * (myStats.skl - otherStats.skl))),
         crit: (critCancelling > 0) ? 0 : Math.max(0, myWeapon.crit + myStats.lck),
         double: (doubleModifier > 0) || ((doubleModifier == 0) &&

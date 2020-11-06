@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-6">Dgt</div>
       <div
-        class="col-3 text-right"
+        :class="'col-3 text-right '+(stats.weak && ' text-positive')"
         v-if="valid"
       >{{stats.mnt}}</div>
       <div
