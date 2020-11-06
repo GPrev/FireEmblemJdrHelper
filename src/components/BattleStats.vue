@@ -42,12 +42,25 @@
       >???</div>
       <div class="col-3 q-px-xs">%</div>
     </div>
+
+    <div
+      class="row q-mt-xs"
+      v-if="valid"
+    >
+      <q-avatar
+        v-for="(skill, skillKey) in skills"
+        :key="skillKey"
+        size="xs"
+      >
+        <img :src="skill.icon" />
+      </q-avatar>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['unit', 'stats', 'valid']
+  props: ['unit', 'stats', 'valid', 'skills']
 }
 </script>
 

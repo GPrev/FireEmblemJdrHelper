@@ -11,12 +11,14 @@
         :unit="attacker"
         :stats="attackStats"
         :valid="attacker && defender"
+        :skills="attackerActiveSkillsNoStyles"
       />
       <battle-stats
         class="col-5"
         :unit="defender"
         :stats="defenseStats"
         :valid="attacker && defender"
+        :skills="defenderActiveSkillsNoStyles"
       />
     </q-card>
 
@@ -59,11 +61,39 @@ export default {
     defenderSkills () {
       return this.getSkills(this.defender)
     },
+    attackerActiveSkills () {
+      return this.getActiveSkills(this.attacker, this.attackerSkills, true)
+    },
+    defenderActiveSkills () {
+      return this.getActiveSkills(this.defender, this.defenderSkills, false)
+    },
+    attackerActiveSkillsNoStyles () {
+      let skills = this.attackerActiveSkills
+      let result = {}
+      Object.keys(skills).forEach((skillKey) => {
+        let skill = skills[skillKey]
+        if (skill.type === "skills") {
+          result[skillKey] = skills[skillKey]
+        }
+      })
+      return result
+    },
+    defenderActiveSkillsNoStyles () {
+      let skills = this.defenderActiveSkills
+      let result = {}
+      Object.keys(skills).forEach((skillKey) => {
+        let skill = skills[skillKey]
+        if (skill.type === "skills") {
+          result[skillKey] = skills[skillKey]
+        }
+      })
+      return result
+    },
     attackerStats () {
-      return this.getStats(this.attacker, this.attackerSkills)
+      return this.getStats(this.attacker, this.attackerActiveSkills)
     },
     defenderStats () {
-      return this.getStats(this.defender, this.defenderSkills)
+      return this.getStats(this.defender, this.defenderActiveSkills)
     },
     attackerWeapon () {
       return this.getWeapon(this.attacker)
@@ -118,6 +148,25 @@ export default {
       }
       return skillList
     },
+    getActiveSkills (unit, unitSkills, attacking, enemyWeapon) {
+      let skillList = {}
+      Object.keys(unitSkills).forEach((skillKey) => {
+        let skill = unitSkills[skillKey]
+        if (skill.condition && skill.stats && (
+          skill.condition === "always" ||
+          (attacking && skill.condition === "attacking") ||
+          (!attacking && skill.condition === "attacked") ||
+          (skill.condition === "hp-low" && (100 * unit.hpCur / unit.stats.hpMax) <= skill.threshold) ||
+          (skill.condition === "hp-high" && (100 * unit.hpCur / unit.stats.hpMax) >= skill.threshold) ||
+          (enemyWeapon && skill.condition === "close" && enemyWeapon.por - max < 2) ||
+          (enemyWeapon && skill.condition === "distant" && enemyWeapon.por - max > 1) ||
+          (enemyWeapon && skill.condition === enemyWeapon.type)
+        )) {
+          skillList[skillKey] = unitSkills[skillKey]
+        }
+      })
+      return skillList
+    },
     getStats (unit, unitSkills) {
       let mystats = {}
       if (unit && unit.stats) {
@@ -152,20 +201,14 @@ export default {
       return mystats
     },
     getWeapon (unit) {
-      let weapon = null
+      let weapon = { atk: 0, spd: 0, hit: 0, crit: 0 }
       if (unit && unit.equipment['weapons-1']) {
         let weaponName = unit.equipment['weapons-1']
         if (this.items.weapons[weaponName]) {
           weapon = this.items.weapons[weaponName]
         }
       }
-      return {
-        atk: weapon ? parseInt(weapon.atk) : 0,
-        spd: weapon ? parseInt(weapon.spd) : 0,
-        hit: weapon ? parseInt(weapon.hit.replace(/%/g, '')) : 0,
-        crit: weapon ? parseInt(weapon.crit.replace(/%/g, '')) : 0,
-        physical: weapon && weapon.damage === 'PHYS'
-      }
+      return weapon
     },
     getCombatBuffs (unitSkills, attacking) {
       let buffs = { str: 0, mag: 0, spd: 0, skl: 0, def: 0, res: 0, lck: 0 }
@@ -190,11 +233,11 @@ export default {
         crit: Math.max(0, myWeapon.crit + myStats.lck),
         double: (myWeapon.spd + myStats.spd > otherWeapon.spd + otherStats.spd + 3)
       }
-      if (myWeapon.physical) {
-        result.mnt = result.mntPhys
+      if (myWeapon.magical) {
+        result.mnt = result.mntMag
       }
       else {
-        result.mnt = result.mntMag
+        result.mnt = result.mntPhys
       }
       return result;
     }

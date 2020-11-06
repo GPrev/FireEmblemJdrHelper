@@ -41,7 +41,7 @@
       >
         <div
           class="col-6"
-          v-if="item.damage === 'MAG'"
+          v-if="item.magical"
         >Magique</div>
         <div
           class="col-6"
@@ -53,12 +53,12 @@
         <div class="col-2 text-right">{{item.atk}}</div>
         <div class="col-1" />
         <div class="col-3">PRC</div>
-        <div class="col-2 text-right">{{item.hit}}</div>
-        <div class="col-3">CRIT</div>
-        <div class="col-2 text-right">{{item.crit}}</div>
-        <div class="col-1" />
+        <div class="col-2 text-right">{{item.hit}}%</div>
         <div class="col-3">VIT</div>
         <div class="col-2 text-right">{{item.spd}}</div>
+        <div class="col-1" />
+        <div class="col-3">CRIT</div>
+        <div class="col-2 text-right">{{item.crit}}%</div>
       </q-item-label>
       <q-item-label
         v-if="itemType !== 'weapons' && item.stats"
