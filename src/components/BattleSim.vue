@@ -186,7 +186,7 @@ export default {
     ...mapActions('UnitStore', ['firebaseUpdateUnit']),
     initHbDialog (unit, unitStats) {
       this.temporaryHpAndBuffs.unit = unit
-      this.temporaryHpAndBuffs.hpCur = unit.hpCur
+      this.temporaryHpAndBuffs.hpCur = Math.min(unit.hpCur, unitStats.hpMax)
       this.temporaryHpAndBuffs.hpMax = unitStats.hpMax
       // Reset buffs
       Object.keys(this.temporaryHpAndBuffs.buffs).forEach((buffKey) => {
