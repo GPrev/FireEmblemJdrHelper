@@ -22,6 +22,15 @@
         <template v-slot:header>
           <q-item-section>
             <q-item-label v-if="!unit">Choisissez une unité</q-item-label>
+            <div v-else>
+              <q-btn
+                clickable
+                v-ripple
+                color="primary"
+                icon="edit"
+                @click="expand(); edit()"
+              />
+            </div>
           </q-item-section>
         </template>
 
@@ -101,8 +110,10 @@ export default {
       this.expanded = false
     },
     expand () {
-      console.log('expand')
       this.expanded = !this.expanded
+    },
+    edit () {
+      this.$emit('edit-hp-buffs');
     }
   },
   components: {

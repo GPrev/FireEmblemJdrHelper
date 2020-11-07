@@ -33,7 +33,7 @@
             <q-badge
               color="white"
               text-color="black"
-              :label="'HP : '+hpCur+'/'+stats.hpMax"
+              :label="'PV : '+hpCur+'/'+stats.hpMax"
             />
           </div>
         </q-linear-progress>
@@ -48,6 +48,12 @@
               class="col-1 text-right"
             >{{stats[statKey]}}</div>
             <div
+              v-if="unit.buffs && unit.buffs[statKey] != 0"
+              :key="statKey+'_buff'"
+              :class="'col-1 '+(unit.buffs[statKey]>0 && ' text-positive ')+(unit.buffs[statKey]<0 && ' text-negative')"
+            >{{(unit.buffs[statKey]>0?'+':'') + unit.buffs[statKey]}}</div>
+            <div
+              v-else
               :key="statKey+'_space'"
               class="col-1"
             />
@@ -169,9 +175,7 @@ export default {
       return mystats
     },
     hpCur () {
-      // Temporary : HP cannot be changed in UI so forced to max
-      //return Math.min(this.unit.hpCur, this.stats.hpMax)
-      return this.stats.hpMax
+      return Math.min(this.unit.hpCur, this.stats.hpMax)
     }
   },
 }

@@ -3,7 +3,7 @@
     <q-input
       class="col"
       filled
-      readonly
+      :readonly="!editable"
       :label="label"
       v-model="myvalue"
     />
@@ -40,7 +40,7 @@
 
 <script>
 export default {
-  props: ['value', 'label', 'min', 'max'],
+  props: ['value', 'label', 'min', 'max', 'editable'],
   computed: {
     myvalue: {
       get () {

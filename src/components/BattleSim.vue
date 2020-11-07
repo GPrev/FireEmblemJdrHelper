@@ -1,6 +1,9 @@
 <template>
   <div class="col">
-    <unit-picker v-model="attackerId" />
+    <unit-picker
+      v-model="attackerId"
+      v-on:edit-hp-buffs="initHbDialog(attacker, attackerStats); showHpAndBuffsDialog = true"
+    />
 
     <q-card
       class="row justify-between q-ma-md q-pa-md"
@@ -26,7 +29,29 @@
       />
     </q-card>
 
-    <unit-picker v-model="defenderId" />
+    <unit-picker
+      v-model="defenderId"
+      v-on:edit-hp-buffs="initHbDialog(defender, defenderStats); showHpAndBuffsDialog = true"
+    />
+
+    <q-dialog
+      v-model="showHpAndBuffsDialog"
+      @before-hide="onHbDialogClose()"
+    >
+      <q-card>
+        <q-card-section>
+          <hp-buffs-dialog v-model="temporaryHpAndBuffs" />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            label="OK"
+            color="primary"
+            v-close-popup
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -34,12 +59,32 @@
 import { mapState, mapActions } from 'vuex'
 
 export default {
+  components: {
+    'unit-picker': require('components/UnitPicker').default,
+    'battle-stats': require('components/BattleStats').default,
+    'hp-buffs-dialog': require('components/HpAndBuffsDialog').default
+  },
   data () {
     return {
       attackerId: null,
       defenderId: null,
       attackerWeaponSlot: 'weapons-1',
-      defenderWeaponSlot: 'weapons-1'
+      defenderWeaponSlot: 'weapons-1',
+      showHpAndBuffsDialog: false,
+      temporaryHpAndBuffs: {
+        unit: null,
+        hpCur: 0,
+        buffs: {
+          str: 0,
+          mag: 0,
+          spd: 0,
+          skl: 0,
+          lck: 0,
+          def: 0,
+          res: 0,
+          mov: 0
+        }
+      },
     }
   },
   computed: {
@@ -92,10 +137,18 @@ export default {
       return this.getCombatBuffs(this.defenderActiveSkills, false)
     },
     attackerStatsBuffed () {
-      return this.addBuffs(this.attackerStats, this.attackerCombatBuffs)
+      let res = this.addBuffs(this.attackerStats, this.attackerCombatBuffs)
+      if (this.attacker && this.attacker.buffs) {
+        res = this.addBuffs(res, this.attacker.buffs)
+      }
+      return res
     },
     defenderStatsBuffed () {
-      return this.addBuffs(this.defenderStats, this.defenderCombatBuffs)
+      let res = this.addBuffs(this.defenderStats, this.defenderCombatBuffs)
+      if (this.defender && this.defender.buffs) {
+        res = this.addBuffs(res, this.defender.buffs)
+      }
+      return res
     },
     attackStats () {
       let me = this.attacker
@@ -121,6 +174,33 @@ export default {
     }
   },
   methods: {
+    ...mapActions('UnitStore', ['firebaseUpdateUnit']),
+    initHbDialog (unit, unitStats) {
+      this.temporaryHpAndBuffs.unit = unit
+      this.temporaryHpAndBuffs.hpCur = unit.hpCur
+      this.temporaryHpAndBuffs.hpMax = unitStats.hpMax
+      // Reset buffs
+      Object.keys(this.temporaryHpAndBuffs.buffs).forEach((buffKey) => {
+        this.temporaryHpAndBuffs.buffs[buffKey] = 0
+      })
+      // Apply existing buffs if any
+      if (unit.buffs) {
+        Object.keys(unit.buffs).forEach((buffKey) => {
+          this.temporaryHpAndBuffs.buffs[buffKey] = unit.buffs[buffKey]
+        })
+      }
+      this.onHbDialogClose()
+    },
+    onHbDialogClose () {
+      let mypayload = {
+        key: this.temporaryHpAndBuffs.unit.id,
+        unit: {
+          hpCur: this.temporaryHpAndBuffs.hpCur,
+          buffs: this.temporaryHpAndBuffs.buffs
+        }
+      }
+      this.firebaseUpdateUnit(mypayload)
+    },
     addBuffs (stats, buffs) {
       let res = {}
       Object.keys(stats).forEach((statsKey) => {
@@ -320,10 +400,6 @@ export default {
       }
       return result;
     }
-  },
-  components: {
-    'unit-picker': require('components/UnitPicker').default,
-    'battle-stats': require('components/BattleStats').default
   },
 }
 </script>
