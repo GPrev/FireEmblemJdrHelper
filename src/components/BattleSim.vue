@@ -302,8 +302,18 @@ export default {
     },
     getWeapon (unit, weaponSlot) {
       let weapon = { atk: 0, spd: 0, hit: 0, crit: 0 }
+      let found = false
+      // We try to find the weapon
       if (unit && unit.equipment[weaponSlot]) {
         let weaponName = unit.equipment[weaponSlot]
+        if (this.items.weapons[weaponName]) {
+          weapon = this.items.weapons[weaponName]
+          found = true
+        }
+      }
+      // Default to weapon-1 in case of non existing weapon 2
+      if (!found && unit && unit.equipment["weapons-1"]) {
+        let weaponName = unit.equipment["weapons-1"]
         if (this.items.weapons[weaponName]) {
           weapon = this.items.weapons[weaponName]
         }
