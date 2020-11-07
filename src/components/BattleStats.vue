@@ -19,8 +19,9 @@
         class=".col"
         dense
         flat
+        round
         color="primary"
-        icon="compare_arrows"
+        icon="cached"
         size="sm"
         :disable="!(unit.equipment['weapons-1'] && unit.equipment['weapons-1'] !== 'none' && unit.equipment['weapons-2'] && unit.equipment['weapons-2'] !== 'none')"
         @click="swapWeapons()"

@@ -18,6 +18,15 @@
         :valid="attacker && defender"
         :skills="attackerActiveSkills"
       />
+      <q-btn
+        dense
+        flat
+        class="col-1"
+        color="primary"
+        icon="compare_arrows"
+        :disable="!(attacker && defender)"
+        @click="swapPositions()"
+      />
       <battle-stats
         class="col-5"
         v-model="defenderWeaponSlot"
@@ -200,6 +209,15 @@ export default {
         }
       }
       this.firebaseUpdateUnit(mypayload)
+    },
+    swapPositions () {
+      let oldAtk = this.attackerId
+      this.attackerId = this.defenderId
+      this.defenderId = oldAtk
+
+      let oldAtkW = this.attackerWeaponSlot
+      this.attackerWeaponSlot = this.defenderWeaponSlot
+      this.defenderWeaponSlot = oldAtkW
     },
     addBuffs (stats, buffs) {
       let res = {}
