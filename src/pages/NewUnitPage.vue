@@ -41,7 +41,7 @@
 
       <up-down
         class=".col"
-        label="HP"
+        label="PV"
         v-model="unit.stats.hpMax"
         :min="bounds.hpMax.min"
         :max="bounds.hpMax.max"
