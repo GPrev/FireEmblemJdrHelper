@@ -73,6 +73,7 @@
                 <img :src="skills[unit.equipment[template.subtype + '-' + i]].icon" />
               </q-avatar>
               <q-avatar
+                square
                 size="xs"
                 v-if="template.type === 'items' && items[template.subtype] && items[template.subtype][unit.equipment[template.subtype + '-' + i]]"
               >
