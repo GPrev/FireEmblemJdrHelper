@@ -231,11 +231,13 @@ export default {
       Object.keys(this.items).forEach((itemType) => {
         Object.keys(this.items[itemType]).forEach((itemKey) => {
           let item = this.items[itemType][itemKey]
-          let category = item.type ? item.type : itemType
-          if (myitems[category] === undefined) {
-            myitems[category] = {}
+          if (!item.hidden) {
+            let category = item.type ? item.type : itemType
+            if (myitems[category] === undefined) {
+              myitems[category] = {}
+            }
+            myitems[category][itemKey] = item
           }
-          myitems[category][itemKey] = item
         })
       })
       return myitems
