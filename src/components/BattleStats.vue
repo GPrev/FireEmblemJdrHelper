@@ -10,6 +10,7 @@
       <q-avatar
         class=".col"
         size="xs"
+        square
       >
         <img :src="weapon.icon" />
       </q-avatar>
