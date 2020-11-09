@@ -44,8 +44,8 @@
       >???</div>
       <div
         class="col-3 text-accent q-px-xs"
-        v-if="stats.double"
-      >x2</div>
+        v-if="valid && stats.nbHit > 1"
+      >x{{stats.nbHit}}</div>
     </div>
     <div class="row">
       <div class="col-6">Hit</div>

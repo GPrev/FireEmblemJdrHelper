@@ -411,14 +411,16 @@ export default {
       let critCancelling = this.countSkillEffect(mySkills, "no-crit") + this.countSkillEffect(otherSkills, "no-crit")
       let weak = this.isWeak(other, myWeapon)
       let weakMultiplier = weak ? 2 : 1
+      let hitMultiplier = (attacking && myWeapon.double) ? 2 : 1
+      let double = (doubleModifier > 0) || ((doubleModifier == 0) &&
+        (myWeapon.spd + myStats.spd > otherWeapon.spd + otherStats.spd + 3))
       let result = {
         mntPhys: weakMultiplier * Math.max(0, myWeapon.atk + myStats.str - otherStats.def),
         mntMag: weakMultiplier * Math.max(0, myWeapon.atk + myStats.mag - otherStats.res),
         weak: weak,
         hit: Math.min(100, Math.max(0, myWeapon.hit + 3 * (myStats.skl - otherStats.skl))),
         crit: (critCancelling > 0) ? 0 : Math.max(0, myWeapon.crit + myStats.lck),
-        double: (doubleModifier > 0) || ((doubleModifier == 0) &&
-          (myWeapon.spd + myStats.spd > otherWeapon.spd + otherStats.spd + 3))
+        nbHit: (double ? 2 : 1) * hitMultiplier
       }
       if (myWeapon.magical) {
         result.mnt = result.mntMag
