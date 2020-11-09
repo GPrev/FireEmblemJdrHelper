@@ -246,8 +246,11 @@ export default {
       if (this.unit === undefined) {
         return {}
       }
+      let inv = {}
       // Items
-      let inv = Object.assign({}, this.unit.items)
+      Object.keys(this.unit.items).forEach((itemType) => {
+        inv[itemType] = Object.assign({}, this.unit.items[itemType])
+      })
       // Skills
       Object.keys(this.unit.masteries).forEach((masteryKey) => {
         let masteryLevel = this.unit.masteries[masteryKey]
@@ -265,6 +268,17 @@ export default {
             }
           }
         }
+      })
+      // Deal with the "none" item
+      Object.keys(inv).forEach((categoryKey) => {
+        console.log(categoryKey, inv[categoryKey])
+        // Delete "none"
+        if (inv[categoryKey].hasOwnProperty("none")) {
+          delete inv[categoryKey]["none"]
+        }
+        // Replace it. This way it will be displayed at the bottom
+        inv[categoryKey]["none"] = true
+        console.log(categoryKey, inv[categoryKey])
       })
       // Return
       return inv
