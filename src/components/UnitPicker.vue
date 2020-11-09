@@ -41,12 +41,12 @@
           <q-item
             clickable
             v-ripple
-            v-for="(unitVal, unitKey) in units"
+            v-for="unitKey in unitKeysFiltered"
             :key="unitKey"
-            @click="pick(unitVal, unitKey)"
+            @click="pick(unitKey)"
           >
             <unit-card
-              :unit="unitVal"
+              :unit="units[unitKey]"
               class="full-width"
             />
           </q-item>
@@ -103,9 +103,12 @@ export default {
       })
       return unitsFiltered
     },
+    unitKeysFiltered () {
+      return Object.keys(this.pcs).concat(Object.keys(this.npcs))
+    },
   },
   methods: {
-    pick (unitVal, unitKey) {
+    pick (unitKey) {
       this.myvalue = unitKey
       this.expanded = false
     },
