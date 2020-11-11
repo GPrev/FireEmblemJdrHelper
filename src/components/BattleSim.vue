@@ -122,10 +122,10 @@ export default {
       return this.getSkills(this.defender)
     },
     attackerActiveSkills () {
-      return this.getActiveSkills(this.attacker, this.attackerSkills, true, this.defenderWeapon)
+      return this.getActiveSkills(this.attacker, this.attackerSkills, true, this.attackerWeapon, this.defenderWeapon)
     },
     defenderActiveSkills () {
-      return this.getActiveSkills(this.defender, this.defenderSkills, false, this.attackerWeapon)
+      return this.getActiveSkills(this.defender, this.defenderSkills, false, this.defenderWeapon, this.attackerWeapon)
     },
     attackerStats () {
       return this.getStats(this.attacker, this.attackerSkills)
@@ -238,7 +238,7 @@ export default {
       }
       return skillList
     },
-    getActiveSkills (unit, unitSkills, attacking, enemyWeapon) {
+    getActiveSkills (unit, unitSkills, attacking, myWeapon, enemyWeapon) {
       let skillList = {}
       Object.keys(unitSkills).forEach((skillKey) => {
         let skill = unitSkills[skillKey]
@@ -255,7 +255,8 @@ export default {
               ((condition === "hp-high") && ((100 * unit.hpCur / unit.stats.hpMax) >= skill.threshold)) ||
               (enemyWeapon && condition === "close" && enemyWeapon["por-max"] < 2) ||
               (enemyWeapon && condition === "distant" && enemyWeapon["por-max"] > 1) ||
-              (enemyWeapon && condition === enemyWeapon.type)
+              (enemyWeapon && condition === "enemy-".concat(enemyWeapon.type)) ||
+              (myWeapon && condition === "self-".concat(myWeapon.type))
             ))) {
               active = false
             }
