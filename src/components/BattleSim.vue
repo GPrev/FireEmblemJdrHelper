@@ -358,10 +358,8 @@ export default {
       // Two loops because immunity has priority
       Object.keys(unitSkills).forEach((equipKey) => {
         let skill = unitSkills[equipKey]
-        console.log(skill.name)
         if (skill.effect && skill.effect.substring(0, 5) === "weak-") {
           weakness[skill.effect.substring(5)] = true
-          console.log(skill.effect.substring(5))
         }
       })
       Object.keys(unitSkills).forEach((equipKey) => {
