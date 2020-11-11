@@ -271,14 +271,12 @@ export default {
       })
       // Deal with the "none" item
       Object.keys(inv).forEach((categoryKey) => {
-        console.log(categoryKey, inv[categoryKey])
         // Delete "none"
         if (inv[categoryKey].hasOwnProperty("none")) {
           delete inv[categoryKey]["none"]
         }
         // Replace it. This way it will be displayed at the bottom
         inv[categoryKey]["none"] = true
-        console.log(categoryKey, inv[categoryKey])
       })
       // Return
       return inv
