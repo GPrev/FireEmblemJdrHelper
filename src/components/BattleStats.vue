@@ -13,6 +13,14 @@
         square
       >
         <img :src="weapon.icon" />
+        <q-popup-proxy context-menu>
+          <q-banner>
+            <item-card
+              itemType="weapons"
+              :itemKey="weapon.key"
+            />
+          </q-banner>
+        </q-popup-proxy>
       </q-avatar>
       <div class=".col">{{weapon.name}}</div>
       <div class="col" />
@@ -82,6 +90,11 @@
         size="xs"
       >
         <img :src="skill.icon" />
+        <q-popup-proxy context-menu>
+          <q-banner>
+            <skill-card :skillKey="skill.key" />
+          </q-banner>
+        </q-popup-proxy>
       </q-avatar>
     </div>
   </div>
@@ -90,6 +103,10 @@
 <script>
 export default {
   props: ['value', 'unit', 'weapon', 'stats', 'valid', 'skills'],
+  components: {
+    'item-card': require('components/ItemCard.vue').default,
+    'skill-card': require('components/SkillCard.vue').default,
+  },
   computed: {
     weaponSlot: {
       get () {
