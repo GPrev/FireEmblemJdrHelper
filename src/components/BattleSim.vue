@@ -341,7 +341,7 @@ export default {
       }
       return item
     },
-    getMountAndArmorWeakness (unit) {
+    getMountAndArmorWeakness (unit, unitSkills) {
       let armor = this.getArmor(unit)
       let mount = this.getMount(unit)
       let weakness = {}
@@ -354,6 +354,22 @@ export default {
       else if (mount && mount.type) { // flying mount
         weakness["flying"] = true
       }
+      // Skill immunity and weakness
+      // Two loops because immunity has priority
+      Object.keys(unitSkills).forEach((equipKey) => {
+        let skill = unitSkills[equipKey]
+        console.log(skill.name)
+        if (skill.effect && skill.effect.substring(0, 5) === "weak-") {
+          weakness[skill.effect.substring(5)] = true
+          console.log(skill.effect.substring(5))
+        }
+      })
+      Object.keys(unitSkills).forEach((equipKey) => {
+        let skill = unitSkills[equipKey]
+        if (skill.effect && skill.effect.substring(0, 7) === "immune-") {
+          weakness[skill.effect.substring(7)] = false
+        }
+      })
       return weakness
     },
     getCombatBuffs (unitSkills, attacking) {
@@ -394,9 +410,9 @@ export default {
 
       return doubleModifier
     },
-    isWeak (unit, weapon) {
+    isWeak (unit, unitSkills, weapon) {
       let result = false
-      let weakness = this.getMountAndArmorWeakness(unit)
+      let weakness = this.getMountAndArmorWeakness(unit, unitSkills)
       if (weapon.effective) {
         let effective = weapon.effective.split(" ")
         effective.forEach(eff => {
@@ -410,7 +426,7 @@ export default {
     getBattleStats (me, other, myStats, otherStats, myWeapon, otherWeapon, mySkills, otherSkills, attacking) {
       let doubleModifier = this.getDoubleModifier(mySkills, otherSkills)
       let critCancelling = this.countSkillEffect(mySkills, "no-crit") + this.countSkillEffect(otherSkills, "no-crit")
-      let weak = this.isWeak(other, myWeapon)
+      let weak = this.isWeak(other, otherSkills, myWeapon)
       let weakMultiplier = weak ? 2 : 1
       let hitMultiplier = (attacking && myWeapon.double) ? 2 : 1
       let double = (doubleModifier > 0) || ((doubleModifier == 0) &&
