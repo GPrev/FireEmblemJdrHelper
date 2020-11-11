@@ -222,7 +222,9 @@ export default {
       let myMasteries = {}
       Object.keys(this.masteries).forEach((masteryKey) => {
         let mastery = this.masteries[masteryKey]
-        myMasteries[mastery.index] = masteryKey
+        if (mastery.index) {
+          myMasteries[mastery.index] = masteryKey
+        }
       })
       return myMasteries
     },
